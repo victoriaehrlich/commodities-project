@@ -6,6 +6,37 @@
     text-align: left;   
 }
 
+.about-week {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 900px;
+  text-align: left;
+}
+
+.title-blog{
+  font-family: 'Libre Baskerville', serif;
+  font-size: 80px;
+  color:#323030;   
+  font-weight: 400;       
+  max-width: 900px;
+  margin: 30px auto;
+  text-align: left;
+}
+
+.paragraph-blog{
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.42;
+  color: #222;
+}
+
+.section-divider{
+  border: none;
+  border-top: 1px dashed #cfcfcf;
+  max-width: 900px;
+  margin: 60px auto;
+}
 
 .section-title{
   font-family: 'Inter', serif;
@@ -13,7 +44,7 @@
   line-height: 1.15;
   font-weight: 400;
   letter-spacing: -0.3px;
-  margin: 60px auto 15px auto;
+  margin: 80px auto 15px auto;
   max-width: 900px;
   text-align: left;
 }
