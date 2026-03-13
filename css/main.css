@@ -10,9 +10,9 @@
   margin-left: auto;
   margin-right: auto;
   width: 100%;
-  max-width: 850px;
+  max-width: 870px;
   text-align: left;
-  padding: 28px 32px;
+  padding: 28px 32px 28px 10px;
   border: 1px solid #e6e6e6;
   border-radius: 6px;
   background-color: #fafafa;
