@@ -9,39 +9,96 @@
 </head>
 
 <body>
+
 	<div class="about-week">
-		<h1 class ="title-blog">About this week</h1>
-		<hr class="section-divider">
-		<p class="paragraph-blog">This week I learnt all about line charts and axes, or at least the beginning of it. It sounds quite simple, but getting a line onto the screen and correctly mapping it to time and values actually involves quite a few different parts... One thing that started to click this week is that D3 builds visualisations piece by piece. Rather than thinking I want a line chart, you're working directly with SVG: Scalable Vector Graphics. Unlike a pixel-based image (where you're essentially colouring in a grid), SVG describes shapes mathematically: a line is just two points with a path between them, a circle is a centre point and a radius. Scale it up or scale it down, it’s really up to you to set the dimensions and style.</p>
-		<p class="paragraph-blog">D3 leans into this fully. I’m not telling it "make me a line chart" and getting something back, unlike your traditional tools like Power BI or Tableau, or even coding languages like Python. You're constructing every part of the chart yourself: here’s a path, drive it with these values; here are some circles, place them at these coordinates. A traditional charting library would give me a line chart functional, but ultimately fixed with no design choices. D3 gives you the raw materials to build whatever you’re imagining.</p>
-		<p class="paragraph-blog">So if you’re curious about what I learnt about this week to work on my line chart, click on the website, inspect it and read about fertiliser prices and the geopolitical tensions around Iran. </p>
-		<p class="paragraph-blog">Here’s my random Friday afternoon thoughts on data and whatever chart I’m currently trying to build...</p>
+
+		<p class="about-label">About this week</p>
+
+
+		<p class="paragraph-blog">
+			This week I learnt more about how D3 works at a much more granular level - not as a tool that generates a chart for you, but as a way of constructing every visual element yourself.
+		</p>
+
+		<p class="paragraph-blog">
+			One thing that started to click is that D3 builds visualisations piece by piece. Rather than thinking I want a line chart, you're working directly with SVG: Scalable Vector Graphics. Unlike a pixel-based image (where you're essentially colouring in a grid), SVG describes shapes mathematically: a line is just two points with a path between them, a circle is a centre point and a radius. Scale it up or scale it down - it's really up to you to set the dimensions and style.
+		</p>
+
+		<p class="paragraph-blog">
+			D3 leans into this fully. I’m not telling it "make me a line chart" and getting something back, unlike traditional tools like Power BI or Tableau, or even coding languages like Python. You're constructing every part of the chart yourself: here’s a path driven by values, here are some circles placed at coordinates. A traditional charting library would give me a working line chart but with fewer design choices. D3 gives you the raw materials to build whatever you're imagining.
+		</p>
+
+		<p class="paragraph-blog">
+			So if you’re curious about what I learnt this week while building my line chart, scroll down and read about fertiliser prices and the geopolitical tensions around Iran.
+		</p>
+
+		<p class="paragraph-blog">
+			Here’s my random Friday afternoon thoughts on data and whatever chart I’m currently trying to build.
+		</p>
+
 		<p class="paragraph-blog">Have a nice weekend!</p>
-		<div class="source-note">GitHub Account: <a
-				href="https://github.com/victoriaehrlich/fertilizer-prices-chart">github.com/victoriaehrlich</a>
-		</div>
+
+		<div class="source-note">
+			GitHub Account:
+			<a href="https://github.com/victoriaehrlich/fertilizer-prices-chart">
+				github.com/victoriaehrlich
+			</a>
 		</div>
 
-		<div class="responsive-svg-container">
-		<h2 class="section-title">The Cost of Fertiliser</h2>
-		<h3 class ="subtitle">Global fertiliser prices are rising again. Here's why it matters.</h3>
-		<p class="paragraph">Global fertiliser prices have begun rising again as conflict involving Iran threatens production and exports from the Middle East. It echoes what happened after Russia's invasion of Ukraine in 2022, when fertiliser and energy markets were thrown into turmoil. But this time the risk is different: the Middle East sits at the heart of global fertiliser supply.</p>
-		<p class="paragraph">The region is both a major producer and a crucial transit hub. Around 35% of globally traded urea passes through the Strait of Hormuz, one of the world’s most important shipping routes. Urea is the most widely used nitrogen fertiliser and is what keeps a huge share of the world's crops growing. Any disruption to production in the Gulf - or to shipping through the strait - can quickly tighten supply for farmers around the world.</p>
-		<p class="chart-title">Monthly global urea fertiliser prices ($/mt)</p>
-		<div id="line-chart"></div>
-		<div class="source-note">Data source: <a
-				href="https://www.worldbank.org/en/research/commodity-markets">www.worldbank.org</a>
-		</div>
-		<p class="paragraph">The timing feels familiar. Russia's invasion of Ukraine began in February 2022, just as farmers across the northern hemisphere were preparing for the planting season. The same is happening now. As farmers start buying fertiliser for the coming season, rising prices and potential shortages could start affecting what they actually decide to plant.</p>
-		<p class="paragraph">But the impact might play out differently this time. Ukraine's invasion immediately disrupted grain exports, sending food prices sharply higher. Fertiliser shocks work more slowly: they raise the cost of growing crops rather than removing food from markets overnight. But if farmers can't afford fertiliser or can't access it, yields could fall across multiple regions later in the year.</p>
-		<div class="source-note">Website: <a
-				href="https://victoriaehrlichadam.my.canva.site/studiodotti/blog">victoriaehrlichadam.my.canva.site/studiodotti</a>
-		</div>
 	</div>
 
-	<!-- Load your scripts here -->
+
+	<hr class="article-start">
+
+
+	<div class="responsive-svg-container">
+
+		<h2 class="section-title">The Cost of Fertiliser</h2>
+
+		<h3 class="subtitle">
+			Global fertiliser prices are rising again. Here's why it matters.
+		</h3>
+
+		<p class="paragraph">
+			Global fertiliser prices have begun rising again as conflict involving Iran threatens production and exports from the Middle East. It echoes what happened after Russia's invasion of Ukraine in 2022, when fertiliser and energy markets were thrown into turmoil. But this time the risk is different: the Middle East sits at the heart of global fertiliser supply.
+		</p>
+
+		<p class="paragraph">
+			The region is both a major producer and a crucial transit hub. Around 35% of globally traded urea passes through the Strait of Hormuz, one of the world’s most important shipping routes. Urea is the most widely used nitrogen fertiliser and is what keeps a huge share of the world's crops growing. Any disruption to production in the Gulf — or to shipping through the strait — can quickly tighten supply for farmers around the world.
+		</p>
+
+		<p class="chart-title">
+			Monthly global urea fertiliser prices ($/mt)
+		</p>
+
+		<div id="line-chart"></div>
+
+		<div class="source-note">
+			Data source:
+			<a href="https://www.worldbank.org/en/research/commodity-markets">
+				www.worldbank.org
+			</a>
+		</div>
+
+		<p class="paragraph">
+			The timing feels familiar. Russia's invasion of Ukraine began in February 2022, just as farmers across the northern hemisphere were preparing for the planting season. The same is happening now. As farmers start buying fertiliser for the coming season, rising prices and potential shortages could start affecting what they actually decide to plant.
+		</p>
+
+		<p class="paragraph">
+			But the impact might play out differently this time. Ukraine's invasion immediately disrupted grain exports, sending food prices sharply higher. Fertiliser shocks work more slowly: they raise the cost of growing crops rather than removing food from markets overnight. But if farmers can't afford fertiliser or can't access it, yields could fall across multiple regions later in the year.
+		</p>
+
+		<div class="source-note">
+			Website:
+			<a href="https://victoriaehrlichadam.my.canva.site/studiodotti/blog">
+				victoriaehrlichadam.my.canva.site/studiodotti
+			</a>
+		</div>
+
+	</div>
+
+
 	<script src="https://d3js.org/d3.v7.min.js"></script>
 	<script src="js/line-chart.js"></script>
-</body>
 
+</body>
 </html>

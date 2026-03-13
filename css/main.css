@@ -1,54 +1,64 @@
 .responsive-svg-container{
-    margin-left: auto;
-    margin-right: auto;
-    width: 100%;
-    max-width: 900px;
-    text-align: left;   
-}
-
-.about-week {
   margin-left: auto;
   margin-right: auto;
   width: 100%;
-  max-width: 870px;
+  max-width: 900px;
   text-align: left;
-  padding: 28px 32px 28px 10px;
-  border: 1px solid #e6e6e6;
-  border-radius: 6px;
-  background-color: #fafafa;
 }
 
-.title-blog{
-  font-family: 'Libre Baskerville', serif;
-  font-size: 50px;
-  color:#323030;   
-  font-weight: 400;       
+/* Intro / About section */
+.about-week {
+  width: 100%;
   max-width: 900px;
-  margin: 0px auto;
+  margin: 60px auto 30px auto;
+  padding: 0;
   text-align: left;
 }
+
+.about-label{
+  font-family: 'Inter', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #7a7a7a;
+  margin: 0 0 14px 0;
+}
+
 
 .paragraph-blog{
   font-family: 'Inter', sans-serif;
-  font-size: 12px;
-  line-height: 1.42;
-  color: #222;
-}
-
-.section-divider{
-  border: none;
-  border-top: 0.5px dashed #898787;
+  font-size: 14px;
+  line-height: 1.75;
+  color: #4a4a4a;
   max-width: 900px;
-  margin: 10px auto;
+  margin: 0 0 16px 0;
 }
 
+.about-meta{
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid #e6e6e6;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: #666;
+}
+
+.about-meta a{
+  color: #1f1f1f;
+  text-decoration: none;
+  border-bottom: 1px solid #cfcfcf;
+}
+
+
+/* Main article */
 .section-title{
-  font-family: 'Inter', serif;
+  font-family: 'Libre Baskerville', serif;
   font-size: 44px;
-  line-height: 1.15;
+  line-height: 1.1;
   font-weight: 400;
-  letter-spacing: -0.3px;
-  margin: 60px auto 15px auto;
+  letter-spacing: -1px;
+  margin: 60px auto 10px auto;
   max-width: 900px;
   text-align: left;
 }
@@ -75,31 +85,46 @@
 
 .chart-title{
   font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  color: #444;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: #555;
   max-width: 900px;
-  margin: 50px auto 30px auto;
+  margin: 42px auto 18px auto;
   text-align: left;
 }
 
 .source-note{
   max-width: 900px;
   margin: 10px auto 40px auto;
-  font-family: Inter, sans-serif;
+  font-family: Georgia, serif;
   font-size: 12px;
   color: #777;
   text-align: left;
 }
 
+.source-note a{
+  color: #444;
+}
+
+/* Optional subtle divider between intro and article */
+.article-start{
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto 36px auto;
+  border: none;
+  border-top: 1px solid #ececec;
+}
+
+/* Chart / axis styles */
 .axis-x path,
 .axis-y path {
-    stroke: #666;
+  stroke: #666;
 }
 
 .axis-x line,
 .axis-y line {
-    stroke: #666;
+  stroke: #666;
 }
 
 .axis-x,
@@ -123,12 +148,12 @@
 }
 
 .grid line {
-    stroke: #e8e8e8;
-    stroke-width: 0.7;
+  stroke: #e8e8e8;
+  stroke-width: 0.7;
 }
 
 .grid path {
-    display: none;
+  display: none;
 }
 
 .event-label{
