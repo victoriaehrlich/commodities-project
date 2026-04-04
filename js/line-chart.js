@@ -44,13 +44,13 @@ const drawLineChart = (data) => {
         .attr("class", "grid")
         .call(
             d3.axisLeft(yScale)
-                .ticks(6)
-                .tickSize(-innerWidth)
+                .ticks(6) // need to test to review its logic, into 6 areas? 
+                .tickSize(-innerWidth) // negative to then go right and follow the entire innerChart length 
                 .tickFormat("")
         );
 
     const bottomAxis = d3.axisBottom(xScale)
-        .ticks(d3.timeMonth.every(6))
+        .ticks(d3.timeMonth.every(6)) // every 6 month, values you put a tick 
         .tickFormat(d => {
             const month = d.getMonth();
             if (month === 0) return d3.timeFormat("%Y")(d);
@@ -109,19 +109,19 @@ const drawLineChart = (data) => {
     //try and append area gradient fill
     const defs = svg.append("defs");
 
-    const gradient = defs.append("linearGradient")
-        .attr("id", "area-gradient")
+    const gradient = defs.append("linearGradient") // this part sets the direction of the gradient from bottom to top rather than x1 to x2
+        .attr("id", "area-gradient") // id's work like division id's or #to define a style or reference something
         .attr("x1", "0%")
         .attr("y1", "100%")
         .attr("x2", "0%")
         .attr("y2", "0%");
 
-    gradient.append("stop")
+    gradient.append("stop") // defines the opacity at y2 
         .attr("offset", "0%")
         .attr("stop-color", aubergine)
         .attr("stop-opacity", 0);
 
-    gradient.append("stop")
+    gradient.append("stop") // defines opacity at y1
         .attr("offset", "100%")
         .attr("stop-color", aubergine)
         .attr("stop-opacity", 0.35);
@@ -132,14 +132,6 @@ const drawLineChart = (data) => {
         .text("Urea prices ($/mt)")
         .attr("x", margin.left)
         .attr("y", 20);
-
-    //innerChart
-     //   .append("text")
-     //   .text("Monthly Urea prices")
-      //  .attr("x", xScale(lastDate) + 10)
-      //  .attr("y", yScale(data[data.length - 1].Urea))
-     //   .attr("dominant-baseline", "middle")
-      //  .attr("class", "chart-label");
 
     // add russian invasion of Ukraine to marke rise of prices
 
