@@ -77,11 +77,15 @@
 			The region is both a major producer and a crucial transit hub. Around 35% of globally traded urea passes through the Strait of Hormuz, one of the world’s most important shipping routes. Urea is the most widely used nitrogen fertiliser and is what keeps a huge share of the world's crops growing. Any disruption to production in the Gulf - or to shipping through the strait - can quickly tighten supply for farmers around the world.
 		</p>
 
-		<p class="chart-title">
+		<p class="chart-title" id="chart-title-label">
 			Monthly global urea fertiliser prices ($/mt)
 		</p>
 
-		<div id="line-chart"></div>
+		<div class="chart-wrapper">
+			<button id="chart-toggle" class="chart-toggle-btn">View crude oil prices</button>
+			<div id="line-chart"></div>
+			<div id="oil-chart" style="display: none;"></div>
+		</div>
 
 		<div class="source-note">
 			Data source:
@@ -109,8 +113,10 @@
 
 
 	<script src="https://d3js.org/d3.v7.min.js"></script>
-	<script src="js/line-chart.js"></script>
 	<script src="js/interactions.js"></script>
+	<script src="js/line-chart.js"></script>
+	<script src="js/line-chart oil.js"></script>
+	<script src="js/toggle.js"></script>
 </body>
 </html>
 

@@ -1,19 +1,19 @@
 //Load data
 
-const parseDate = d3.timeParse("%d/%m/%Y");
+const parseDateOil = d3.timeParse("%m/%d/%Y");
 
-d3.csv("data/Urea_prices2.csv", d => ({
-    Date: parseDate(d.Date),
-    Urea: +d.Urea
+d3.csv("data/Crude_prices.csv", d => ({
+    Date: parseDateOil(d.Date),
+    Crude: +d.Crude
 })).then(data => {
     console.log(data);
-    const ctx = drawLineChart(data);
+    const ctx = drawOilChart(data);
     createTooltip(ctx);
     handleMouseEvents(ctx, data);
 });
 
 // Create the line chart here
-const drawLineChart = (data) => {
+const drawOilChart = (data) => {
     const margin = { top: 40, right: 170, bottom: 55, left: 40 };
 
     const width = 1000;
@@ -21,7 +21,7 @@ const drawLineChart = (data) => {
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
-    const svg = d3.select("#line-chart")
+    const svg = d3.select("#oil-chart")
         .append("svg")
         .attr("viewBox", `0 0 ${width} ${height}`);
 
@@ -36,9 +36,9 @@ const drawLineChart = (data) => {
         .domain([firstDate, lastDate])
         .range([0, innerWidth]);
 
-    const maxPrice = d3.max(data, d => d.Urea);
+    const maxPrice = d3.max(data, d => d.Crude);
     const yScale = d3.scaleLinear()
-        .domain([0, maxPrice * 1.05]) // adding some headroom
+        .domain([0, maxPrice * 1.05])
         .range([innerHeight, 0]);
 
     // grid first
@@ -46,13 +46,13 @@ const drawLineChart = (data) => {
         .attr("class", "grid")
         .call(
             d3.axisLeft(yScale)
-                .ticks(6) // need to test to review its logic, into 6 areas? 
-                .tickSize(-innerWidth) // negative to then go right and follow the entire innerChart length 
+                .ticks(4)
+                .tickSize(-innerWidth)
                 .tickFormat("")
         );
 
     const bottomAxis = d3.axisBottom(xScale)
-        .ticks(d3.timeMonth.every(6)) // every 6 month, values you put a tick 
+        .ticks(d3.timeMonth.every(6))
         .tickFormat(d => {
             const month = d.getMonth();
             if (month === 0) return d3.timeFormat("%Y")(d);
@@ -62,7 +62,7 @@ const drawLineChart = (data) => {
 
     const leftAxis = d3.axisLeft(yScale);
 
-    const aubergine = "#b52e5fff";
+    const blue = "#315ed9ff";
 
     innerChart
         .selectAll("circle")
@@ -70,8 +70,8 @@ const drawLineChart = (data) => {
         .join("circle")
         .attr("r", 2)
         .attr("cx", d => xScale(d.Date))
-        .attr("cy", d => yScale(d.Urea))
-        .attr("fill", aubergine);
+        .attr("cy", d => yScale(d.Crude))
+        .attr("fill", blue);
 
     innerChart
         .append("g")
@@ -86,70 +86,64 @@ const drawLineChart = (data) => {
 
     const lineGenerator = d3.line()
         .x(d => xScale(d.Date))
-        .y(d => yScale(d.Urea))
+        .y(d => yScale(d.Crude))
         .curve(d3.curveCardinal);
 
     innerChart
         .append("path")
         .attr("d", lineGenerator(data))
-        .attr("stroke", aubergine)
+        .attr("stroke", blue)
         .attr("stroke-width", 1.8)
         .attr("fill", "none");
 
     const areaGenerator = d3.area()
         .x(d => xScale(d.Date))
         .y0(yScale(0))
-        .y1(d => yScale(d.Urea))
+        .y1(d => yScale(d.Crude))
         .curve(d3.curveCardinal);
 
     innerChart
         .append("path")
         .attr("class", "area-path")
         .attr("d", areaGenerator(data))
-        .attr("fill", aubergine)
-        .attr("fill", "url(#area-gradient)");
+        .attr("fill", blue)
+        .attr("fill", "url(#area-gradient-oil)");
 
-    //try and append area gradient fill
     const defs = svg.append("defs");
 
-    const gradient = defs.append("linearGradient") // this part sets the direction of the gradient from bottom to top rather than x1 to x2
-        .attr("id", "area-gradient") // id's work like division id's or #to define a style or reference something
+    const gradient = defs.append("linearGradient")
+        .attr("id", "area-gradient-oil")
         .attr("x1", "0%")
         .attr("y1", "100%")
         .attr("x2", "0%")
         .attr("y2", "0%");
 
-    gradient.append("stop") // defines the opacity at y2 
+    gradient.append("stop")
         .attr("offset", "0%")
-        .attr("stop-color", aubergine)
+        .attr("stop-color", blue)
         .attr("stop-opacity", 0);
 
-    gradient.append("stop") // defines opacity at y1
+    gradient.append("stop")
         .attr("offset", "100%")
-        .attr("stop-color", aubergine)
+        .attr("stop-color", blue)
         .attr("stop-opacity", 0.35);
 
     svg
         .append("text")
         .attr("class", "chart-label")
-        .text("Urea prices ($/mt)")
+        .text("Crude oil prices ($/barrel)")
         .attr("x", margin.left)
         .attr("y", 20);
 
-    // add russian invasion of Ukraine to marke rise of prices
-
     const invasionDate = new Date(2022, 1, 24); // 24 Feb 2022 Russia Ukraine
-    
+
     innerChart
         .append("line")
         .attr("class", "event-line")
         .attr("x1", xScale(invasionDate))
         .attr("x2", xScale(invasionDate))
         .attr("y1", yScale(0))
-        .attr("y2", 0)
-        .attr("stroke", "#777")
-        .attr("stroke-width", 1)
-        .attr("stroke-dasharray", "4 4");
+        .attr("y2", 0);
 
     innerChart
         .append("text")
@@ -158,7 +152,7 @@ const drawLineChart = (data) => {
         .attr("y", 350)
         .text("Russian invasion of Ukraine");
 
-    const invasionDateUS = new Date(2026, 1, 28); // 15 Feb 2026 US launch attacks on Iran
+    const invasionDateUS = new Date(2026, 1, 28);
 
     innerChart
         .append("line")
@@ -166,16 +160,13 @@ const drawLineChart = (data) => {
         .attr("x1", xScale(invasionDateUS))
         .attr("x2", xScale(invasionDateUS))
         .attr("y1", yScale(0))
-        .attr("y2", 0)
-        .attr("stroke", "#777")
-        .attr("stroke-width", 1)
-        .attr("stroke-dasharray", "4 4");
+        .attr("y2", 0);
 
     const usLabel = innerChart
-    .append("text")
-    .attr("class", "event-label")
-    .attr("x", xScale(invasionDateUS) - 106)
-    .attr("y", 320);
+        .append("text")
+        .attr("class", "event-label")
+        .attr("x", xScale(invasionDateUS) - 106)
+        .attr("y", 320);
 
     usLabel.append("tspan")
         .attr("x", xScale(invasionDateUS) - 106)
