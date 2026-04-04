@@ -146,6 +146,12 @@
   fill: #666;
 }
 
+.tooltip-year, .tooltip-price {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  fill: #444;
+}
+
 .event-line{
   stroke: #777;
   stroke-width: 1;

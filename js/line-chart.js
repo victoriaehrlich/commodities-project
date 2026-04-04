@@ -1,5 +1,7 @@
 //Load data
 
+let innerChart, innerHeight, firstDate, xScale, yScale;
+
 const parseDate = d3.timeParse("%d/%m/%Y");
 
 d3.csv("data/Urea_prices2.csv", d => ({
@@ -8,6 +10,8 @@ d3.csv("data/Urea_prices2.csv", d => ({
 })).then(data => {
     console.log(data);
     drawLineChart(data);
+    createTooltip(data);
+    handleMouseEvents(data);
 });
 
 // Create the line chart here
@@ -17,25 +21,25 @@ const drawLineChart = (data) => {
     const width = 1000;
     const height = 500;
     const innerWidth = width - margin.left - margin.right;
-    const innerHeight = height - margin.top - margin.bottom;
+    innerHeight = height - margin.top - margin.bottom;
 
     const svg = d3.select("#line-chart")
         .append("svg")
         .attr("viewBox", `0 0 ${width} ${height}`);
 
-    const innerChart = svg
+    innerChart = svg
         .append("g")
         .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-    const firstDate = d3.min(data, d => d.Date);
+    firstDate = d3.min(data, d => d.Date);
     const lastDate = d3.max(data, d => d.Date);
 
-    const xScale = d3.scaleTime()
+    xScale = d3.scaleTime()
         .domain([firstDate, lastDate])
         .range([0, innerWidth]);
 
     const maxPrice = d3.max(data, d => d.Urea);
-    const yScale = d3.scaleLinear()
+    yScale = d3.scaleLinear()
         .domain([0, maxPrice * 1.05]) // adding some headroom
         .range([innerHeight, 0]);
 
@@ -102,6 +106,7 @@ const drawLineChart = (data) => {
 
     innerChart
         .append("path")
+        .attr("class", "area-path")
         .attr("d", areaGenerator(data))
         .attr("fill", aubergine)
         .attr("fill", "url(#area-gradient)");
@@ -152,7 +157,7 @@ const drawLineChart = (data) => {
         .append("text")
         .attr("class", "event-label")
         .attr("x", xScale(invasionDate) + 6)
-        .attr("y", 10)
+        .attr("y", 350)
         .text("Russian invasion of Ukraine");
 
     const invasionDateUS = new Date(2026, 1, 28); // 15 Feb 2026 US launch attacks on Iran
@@ -171,16 +176,16 @@ const drawLineChart = (data) => {
     const usLabel = innerChart
     .append("text")
     .attr("class", "event-label")
-    .attr("x", xScale(invasionDateUS) + 6)
-    .attr("y", 10);
+    .attr("x", xScale(invasionDateUS) - 106)
+    .attr("y", 320);
 
     usLabel.append("tspan")
-        .attr("x", xScale(invasionDateUS) + 6)
+        .attr("x", xScale(invasionDateUS) - 106)
         .attr("dy", "0em")
         .text("US and Israel launch");
 
     usLabel.append("tspan")
-        .attr("x", xScale(invasionDateUS) + 6)
+        .attr("x", xScale(invasionDateUS) - 106)
         .attr("dy", "1.1em")
         .text("attacks on Iran");
 };
