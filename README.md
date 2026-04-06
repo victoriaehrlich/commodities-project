@@ -35,7 +35,7 @@ commodities project/
 
 ### Crude_prices.csv
 - Date format: MM/DD/YYYY (note: different order from the urea file)
-- Column: `Crude` (price in $)
+- Column: `Crude` (price in $/barrel)
 - Source: Macrotrends - https://www.macrotrends.net/1369/crude-oil-price-history-chart
 
 

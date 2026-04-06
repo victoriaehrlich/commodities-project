@@ -111,7 +111,7 @@ const drawOilChart = (data) => {
     svg
         .append("text")
         .attr("class", "chart-label")
-        .text("Crude prices ($)")
+        .text("Crude prices ($/barrel)")
         .attr("x", margin.left)
         .attr("y", 20);
 
