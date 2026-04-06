@@ -12,9 +12,10 @@
 
 	<div class="about-week">
 
-			<p class="about-label">About the next few weeks</p>
+		<p class="about-label">About the next few weeks</p>
 
-				<p class="paragraph-blog">
+
+		<p class="paragraph-blog">
 					I'm coming to the end of my mentorship, and rather than just working on small projects, we decided to do something a bit more 
 					deliberate: a four-week collaboration project. A shared GitHub repository, clear goals, and a proper introduction to what it actually 
 					means to work on code with someone else.
@@ -31,22 +32,12 @@
 
 				<p class="paragraph-blog">
 					So this post is going to work a little differently. Instead of a 
-					fresh article each week, I'll be updating this one - adding to it as I work 
-					through what I want to learn over the next few weeks. The plan so far: making 
-					the charts interactive so you can hover over data points, adding the ability to 
-					toggle between fertiliser prices and crude oil, building a bar chart with a new 
-					dataset, and - thanks to my mentor and collaborator - we're pushing a map in too. 
-					Genuinely excited about that last one and learning from him whilst collaborating on a topic and an industry we're both interested in: data journalism. 
-				</p>
+					fresh article each week, I'll be updating this one - keep adding text...
 
 				<p class="paragraph-blog">
-					Alongside all of this, I'm still working through the D3 book chapter by chapter. 
-					There's something satisfying about having a goal-shaped project to apply the 
-					theory to as you go — it stops the reading from feeling abstract.
-				</p>
+							Come back and see what's been added. Have a nice weekend!</p>
 
-				<p class="paragraph-blog">
-					Come back and see what's been added. Have a nice weekend!</p>
+				<p class="paragraph-blog">Have a nice weekend!</p>
 
 		<div class="source-note">
 			GitHub Account:
@@ -63,29 +54,35 @@
 
 	<div class="responsive-svg-container">
 
-		<h2 class="section-title">The Cost of Fertiliser</h2>
+		<h2 class="section-title">The Cost of Fertiliser and Fuel</h2>
 
-		<h3 class="subtitle">
-			Global fertiliser prices are rising again. Here's why it matters.
-		</h3>
+				<h3 class="subtitle">
+					Two commodities. One crisis. Here's why both matter.
+				</h3>
 
-		<p class="paragraph">
-			Global fertiliser prices have begun rising again as conflict involving Iran threatens production and exports from the Middle East. It echoes what happened after Russia's invasion of Ukraine in 2022, when fertiliser and energy markets were thrown into turmoil. But this time the risk is different: the Middle East sits at the heart of global fertiliser supply.
-		</p>
+				<p class="paragraph">
+					Global fertiliser and crude oil prices have both begun rising again as conflict 
+					involving Iran threatens production and exports from the Middle East. It echoes 
+					what happened after Russia's invasion of Ukraine in 2022, when energy and 
+					agricultural markets were thrown into turmoil together. That connection is not 
+					a coincidence - the two commodities are deeply linked.
+				</p>
 
-		<p class="paragraph">
-			The region is both a major producer and a crucial transit hub. Around 35% of globally traded urea passes through the Strait of Hormuz, one of the world’s most important shipping routes. Urea is the most widely used nitrogen fertiliser and is what keeps a huge share of the world's crops growing. Any disruption to production in the Gulf - or to shipping through the strait - can quickly tighten supply for farmers around the world.
-		</p>
+				<p class="paragraph">
+					Crude oil drives the cost of natural gas, and natural gas is the primary 
+					feedstock for producing urea, the world's most widely used nitrogen fertiliser. 
+					When oil prices rise, fertiliser production becomes more expensive almost 
+					immediately. The Middle East sits at the centre of both supply chains: it is a 
+					major crude oil exporter and a key producer and transit point for fertilisers, 
+					with around 35% of globally traded urea passing through the Strait of Hormuz. 
+					A disruption to one market rarely stays contained to one market.
+				</p>
 
-		<p class="chart-title" id="chart-title-label">
+		<p class="chart-title">
 			Monthly global urea fertiliser prices ($/mt)
 		</p>
 
-		<div class="chart-wrapper">
-			<button id="chart-toggle" class="chart-toggle-btn">View crude oil prices</button>
-			<div id="line-chart"></div>
-			<div id="oil-chart" style="display: none;"></div>
-		</div>
+		<div id="line-chart"></div>
 
 		<div class="source-note">
 			Data source:
@@ -95,12 +92,29 @@
 		</div>
 
 		<p class="paragraph">
-			The timing feels familiar. Russia's invasion of Ukraine began in February 2022, just as farmers across the northern hemisphere were preparing for the planting season. The same is happening now. As farmers start buying fertiliser for the coming season, rising prices and potential shortages could start affecting what they actually decide to plant.
+				The timing feels familiar. Russia's invasion of Ukraine in February 2022 
+				triggered simultaneous shocks across both markets - oil prices spiked, 
+				gas supplies tightened, and fertiliser costs surged just as farmers across 
+				the northern hemisphere were preparing for the planting season. The same 
+				pressure is building now, and with it the same downstream risk: if fertiliser 
+				becomes too expensive or too scarce, farmers adjust what they plant and how 
+				much - and that ripples through food supply months later.
+			</p>
+
+			<p class="paragraph">
+				But the two commodities transmit their shocks differently. An oil price spike 
+				is felt quickly - in transport, energy bills, and production costs within weeks. 
+				Fertiliser works on a slower clock. Farmers commit to their inputs before the 
+				growing season begins, so a price surge in spring can quietly reduce yields 
+				by autumn. Both charts tell part of the same story — one fast-moving, one 
+				slow-burning.
+			</p>
+
+		<p class="chart-title">
+			Monthly global crude oil prices ($)
 		</p>
 
-		<p class="paragraph">
-			But the impact might play out differently this time. Ukraine's invasion immediately disrupted grain exports, sending food prices sharply higher. Fertiliser shocks work more slowly: they raise the cost of growing crops rather than removing food from markets overnight. But if farmers can't afford fertiliser or can't access it, yields could fall across multiple regions later in the year.
-		</p>
+		<div id="line-chart-oil"></div>
 
 		<div class="source-note">
 			Website:
@@ -111,12 +125,11 @@
 
 	</div>
 
-
 	<script src="https://d3js.org/d3.v7.min.js"></script>
+	<script src="js/shared-constants.js"></script>
+	<script src="js/line-chart-urea.js"></script>
 	<script src="js/interactions.js"></script>
-	<script src="js/line-chart.js"></script>
-	<script src="js/line-chart oil.js"></script>
-	<script src="js/toggle.js"></script>
+	<script src="js/load-data.js"></script>
+	<script src="js/line-chart-oil.js"></script>
 </body>
 </html>
-

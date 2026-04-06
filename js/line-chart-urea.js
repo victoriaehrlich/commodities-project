@@ -1,53 +1,35 @@
-//Load data
-
-const parseDate = d3.timeParse("%d/%m/%Y");
-
-d3.csv("data/Urea_prices2.csv", d => ({
-    Date: parseDate(d.Date),
-    Urea: +d.Urea
-})).then(data => {
-    console.log(data);
-    const ctx = drawLineChart(data);
-    createTooltip(ctx);
-    handleMouseEvents(ctx, data);
-});
-
 // Create the line chart here
 const drawLineChart = (data) => {
-    const margin = { top: 40, right: 170, bottom: 55, left: 40 };
-
-    const width = 1000;
-    const height = 500;
-    const innerWidth = width - margin.left - margin.right;
-    const innerHeight = height - margin.top - margin.bottom;
 
     const svg = d3.select("#line-chart")
         .append("svg")
         .attr("viewBox", `0 0 ${width} ${height}`);
 
-    const innerChart = svg
+    ureaInnerChart = svg
         .append("g")
         .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
     const firstDate = d3.min(data, d => d.Date);
     const lastDate = d3.max(data, d => d.Date);
 
-    const xScale = d3.scaleTime()
+    lineXScale = d3.scaleTime()
         .domain([firstDate, lastDate])
         .range([0, innerWidth]);
+    const xScale = lineXScale;
 
     const maxPrice = d3.max(data, d => d.Urea);
-    const yScale = d3.scaleLinear()
+    lineYScale = d3.scaleLinear()
         .domain([0, maxPrice * 1.05]) // adding some headroom
         .range([innerHeight, 0]);
+    const yScale = lineYScale;
 
     // grid first
-    innerChart.append("g")
+    ureaInnerChart.append("g")
         .attr("class", "grid")
         .call(
             d3.axisLeft(yScale)
                 .ticks(6) // need to test to review its logic, into 6 areas? 
-                .tickSize(-innerWidth) // negative to then go right and follow the entire innerChart length 
+                .tickSize(-innerWidth) // negative to then go right and follow the entire ureaInnerChart length 
                 .tickFormat("")
         );
 
@@ -62,24 +44,22 @@ const drawLineChart = (data) => {
 
     const leftAxis = d3.axisLeft(yScale);
 
-    const aubergine = "#b52e5fff";
-
-    innerChart
+    ureaInnerChart
         .selectAll("circle")
         .data(data)
         .join("circle")
         .attr("r", 2)
         .attr("cx", d => xScale(d.Date))
         .attr("cy", d => yScale(d.Urea))
-        .attr("fill", aubergine);
+        .attr("fill", fertiliser);
 
-    innerChart
+    ureaInnerChart
         .append("g")
         .attr("class", "axis-x")
         .attr("transform", `translate(0, ${innerHeight})`)
         .call(bottomAxis);
 
-    innerChart
+    ureaInnerChart
         .append("g")
         .attr("class", "axis-y")
         .call(leftAxis);
@@ -89,10 +69,10 @@ const drawLineChart = (data) => {
         .y(d => yScale(d.Urea))
         .curve(d3.curveCardinal);
 
-    innerChart
+    ureaInnerChart
         .append("path")
         .attr("d", lineGenerator(data))
-        .attr("stroke", aubergine)
+        .attr("stroke", fertiliser)
         .attr("stroke-width", 1.8)
         .attr("fill", "none");
 
@@ -102,11 +82,10 @@ const drawLineChart = (data) => {
         .y1(d => yScale(d.Urea))
         .curve(d3.curveCardinal);
 
-    innerChart
+    ureaInnerChart
         .append("path")
-        .attr("class", "area-path")
         .attr("d", areaGenerator(data))
-        .attr("fill", aubergine)
+        .attr("fill", fertiliser)
         .attr("fill", "url(#area-gradient)");
 
     //try and append area gradient fill
@@ -121,12 +100,12 @@ const drawLineChart = (data) => {
 
     gradient.append("stop") // defines the opacity at y2 
         .attr("offset", "0%")
-        .attr("stop-color", aubergine)
+        .attr("stop-color", fertiliser)
         .attr("stop-opacity", 0);
 
     gradient.append("stop") // defines opacity at y1
         .attr("offset", "100%")
-        .attr("stop-color", aubergine)
+        .attr("stop-color", fertiliser)
         .attr("stop-opacity", 0.35);
 
     svg
@@ -140,7 +119,7 @@ const drawLineChart = (data) => {
 
     const invasionDate = new Date(2022, 1, 24); // 24 Feb 2022 Russia Ukraine
     
-    innerChart
+    ureaInnerChart
         .append("line")
         .attr("class", "event-line")
         .attr("x1", xScale(invasionDate))
@@ -151,7 +130,7 @@ const drawLineChart = (data) => {
         .attr("stroke-width", 1)
         .attr("stroke-dasharray", "4 4");
 
-    innerChart
+    ureaInnerChart
         .append("text")
         .attr("class", "event-label")
         .attr("x", xScale(invasionDate) + 6)
@@ -160,7 +139,7 @@ const drawLineChart = (data) => {
 
     const invasionDateUS = new Date(2026, 1, 28); // 15 Feb 2026 US launch attacks on Iran
 
-    innerChart
+    ureaInnerChart
         .append("line")
         .attr("class", "event-line")
         .attr("x1", xScale(invasionDateUS))
@@ -171,7 +150,7 @@ const drawLineChart = (data) => {
         .attr("stroke-width", 1)
         .attr("stroke-dasharray", "4 4");
 
-    const usLabel = innerChart
+    const usLabel = ureaInnerChart
     .append("text")
     .attr("class", "event-label")
     .attr("x", xScale(invasionDateUS) - 106)
@@ -186,6 +165,4 @@ const drawLineChart = (data) => {
         .attr("x", xScale(invasionDateUS) - 106)
         .attr("dy", "1.1em")
         .text("attacks on Iran");
-
-    return { innerChart, innerHeight, xScale, yScale };
 };

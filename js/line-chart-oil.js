@@ -1,58 +1,40 @@
-//Load data
-
-const parseDateOil = d3.timeParse("%m/%d/%Y");
-
-d3.csv("data/Crude_prices.csv", d => ({
-    Date: parseDateOil(d.Date),
-    Crude: +d.Crude
-})).then(data => {
-    console.log(data);
-    const ctx = drawOilChart(data);
-    createTooltip(ctx);
-    handleMouseEvents(ctx, data);
-});
-
 // Create the line chart here
 const drawOilChart = (data) => {
-    const margin = { top: 40, right: 170, bottom: 55, left: 40 };
 
-    const width = 1000;
-    const height = 500;
-    const innerWidth = width - margin.left - margin.right;
-    const innerHeight = height - margin.top - margin.bottom;
-
-    const svg = d3.select("#oil-chart")
+    const svg = d3.select("#line-chart-oil")
         .append("svg")
         .attr("viewBox", `0 0 ${width} ${height}`);
 
-    const innerChart = svg
+    oilInnerChart = svg
         .append("g")
         .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-    const firstDate = d3.min(data, d => d.Date);
-    const lastDate = d3.max(data, d => d.Date);
+    const firstDate = d3.min(data, d => d.DateOil);
+    const lastDate = d3.max(data, d => d.DateOil);
 
-    const xScale = d3.scaleTime()
+    oilXScale = d3.scaleTime()
         .domain([firstDate, lastDate])
         .range([0, innerWidth]);
+    const xScale = oilXScale;
 
     const maxPrice = d3.max(data, d => d.Crude);
-    const yScale = d3.scaleLinear()
-        .domain([0, maxPrice * 1.05])
+    oilYScale = d3.scaleLinear()
+        .domain([0, maxPrice * 1.05]) // adding some headroom
         .range([innerHeight, 0]);
+    const yScale = oilYScale;
 
     // grid first
-    innerChart.append("g")
+    oilInnerChart.append("g")
         .attr("class", "grid")
         .call(
             d3.axisLeft(yScale)
-                .ticks(4)
-                .tickSize(-innerWidth)
+                .ticks(6) 
+                .tickSize(-innerWidth) 
                 .tickFormat("")
         );
 
     const bottomAxis = d3.axisBottom(xScale)
-        .ticks(d3.timeMonth.every(6))
+        .ticks(d3.timeMonth.every(6)) // every 6 month, values you put a tick 
         .tickFormat(d => {
             const month = d.getMonth();
             if (month === 0) return d3.timeFormat("%Y")(d);
@@ -62,53 +44,51 @@ const drawOilChart = (data) => {
 
     const leftAxis = d3.axisLeft(yScale);
 
-    const blue = "#315ed9ff";
-
-    innerChart
+    oilInnerChart
         .selectAll("circle")
         .data(data)
         .join("circle")
         .attr("r", 2)
-        .attr("cx", d => xScale(d.Date))
+        .attr("cx", d => xScale(d.DateOil))
         .attr("cy", d => yScale(d.Crude))
-        .attr("fill", blue);
+        .attr("fill", Oil);
 
-    innerChart
+    oilInnerChart
         .append("g")
         .attr("class", "axis-x")
         .attr("transform", `translate(0, ${innerHeight})`)
         .call(bottomAxis);
 
-    innerChart
+    oilInnerChart
         .append("g")
         .attr("class", "axis-y")
         .call(leftAxis);
 
     const lineGenerator = d3.line()
-        .x(d => xScale(d.Date))
+        .x(d => xScale(d.DateOil))
         .y(d => yScale(d.Crude))
         .curve(d3.curveCardinal);
 
-    innerChart
+    oilInnerChart
         .append("path")
         .attr("d", lineGenerator(data))
-        .attr("stroke", blue)
+        .attr("stroke", Oil)
         .attr("stroke-width", 1.8)
         .attr("fill", "none");
 
     const areaGenerator = d3.area()
-        .x(d => xScale(d.Date))
+        .x(d => xScale(d.DateOil))
         .y0(yScale(0))
         .y1(d => yScale(d.Crude))
         .curve(d3.curveCardinal);
 
-    innerChart
+    oilInnerChart
         .append("path")
-        .attr("class", "area-path")
         .attr("d", areaGenerator(data))
-        .attr("fill", blue)
+        .attr("fill", Oil)
         .attr("fill", "url(#area-gradient-oil)");
 
+    //try and append area gradient fill
     const defs = svg.append("defs");
 
     const gradient = defs.append("linearGradient")
@@ -118,55 +98,63 @@ const drawOilChart = (data) => {
         .attr("x2", "0%")
         .attr("y2", "0%");
 
-    gradient.append("stop")
+    gradient.append("stop") 
         .attr("offset", "0%")
-        .attr("stop-color", blue)
+        .attr("stop-color", Oil)
         .attr("stop-opacity", 0);
 
-    gradient.append("stop")
+    gradient.append("stop") 
         .attr("offset", "100%")
-        .attr("stop-color", blue)
+        .attr("stop-color", Oil)
         .attr("stop-opacity", 0.35);
 
     svg
         .append("text")
         .attr("class", "chart-label")
-        .text("Crude oil prices ($/barrel)")
+        .text("Crude prices ($)")
         .attr("x", margin.left)
         .attr("y", 20);
 
-    const invasionDate = new Date(2022, 1, 24); // 24 Feb 2022 Russia Ukraine
+    // add russian invasion of Ukraine to marke rise of prices
 
-    innerChart
+    const invasionDate = new Date(2022, 1, 24); // 24 Feb 2022 Russia Ukraine
+    
+    oilInnerChart
         .append("line")
         .attr("class", "event-line")
         .attr("x1", xScale(invasionDate))
         .attr("x2", xScale(invasionDate))
         .attr("y1", yScale(0))
-        .attr("y2", 0);
+        .attr("y2", 0)
+        .attr("stroke", "#777")
+        .attr("stroke-width", 1)
+        .attr("stroke-dasharray", "4 4");
 
-    innerChart
+    oilInnerChart
         .append("text")
         .attr("class", "event-label")
         .attr("x", xScale(invasionDate) + 6)
         .attr("y", 350)
         .text("Russian invasion of Ukraine");
 
-    const invasionDateUS = new Date(2026, 1, 28);
+    const invasionDateUS = new Date(2026, 1, 28); // 15 Feb 2026 US launch attacks on Iran
 
-    innerChart
+    oilInnerChart
         .append("line")
         .attr("class", "event-line")
         .attr("x1", xScale(invasionDateUS))
         .attr("x2", xScale(invasionDateUS))
         .attr("y1", yScale(0))
-        .attr("y2", 0);
+        .attr("y2", 0)
+        .attr("stroke", "#777")
+        .attr("stroke-width", 1)
+        .attr("stroke-dasharray", "4 4");
 
-    const usLabel = innerChart
-        .append("text")
-        .attr("class", "event-label")
-        .attr("x", xScale(invasionDateUS) - 106)
-        .attr("y", 320);
+    const usLabel = oilInnerChart
+    .append("text")
+    .attr("class", "event-label")
+    .attr("x", xScale(invasionDateUS) - 106)
+    .attr("y", 320);
 
     usLabel.append("tspan")
         .attr("x", xScale(invasionDateUS) - 106)
@@ -177,6 +165,4 @@ const drawOilChart = (data) => {
         .attr("x", xScale(invasionDateUS) - 106)
         .attr("dy", "1.1em")
         .text("attacks on Iran");
-
-    return { innerChart, innerHeight, xScale, yScale };
 };

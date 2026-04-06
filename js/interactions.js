@@ -1,76 +1,176 @@
-const createTooltip = ({ innerChart, innerHeight }) => {
+const createTooltip = () => {
 
-    const textColor = "#666";
+  const textColor = "#666";
 
-    const tooltip = innerChart
-        .append("g")
-            .attr("class", "tooltip")
-            .style("visibility", "hidden");
+  const tooltip = ureaInnerChart
+    .append("g")
+      .attr("class", "tooltip")
+      .style("display", "none");
 
-    tooltip
-        .append("line")
-            .attr("x1", 0)
-            .attr("x2", 0)
-            .attr("y1", -30)
-            .attr("y2", innerHeight)
-            .attr("stroke", textColor)
-            .attr("stroke-width", 1)
-            .attr("stroke-dasharray", "4 4");
+  tooltip
+    .append("line")
+      .attr("x1", 0)
+      .attr("x2", 0)
+      .attr("y1", 0)
+      .attr("y2", innerHeight)
+      .attr("stroke", textColor)
+      .attr("stroke-width", 1)
+      .attr("stroke-dasharray", "4 4");
 
-    tooltip
-        .append("text")
-            .attr("class", "tooltip-year")
-            .attr("x", 8);
+  tooltip
+    .append("rect")
+      .attr("class", "tooltip-box")
+      .attr("x", 2)          // small offset from  line
+      .attr("y", 4)          // small offset from  top
+      .attr("width", 74)     
+      .attr("height", 38)    
+      .attr("fill", "white")
+      .attr("stroke", "#ccc")
+      .attr("stroke-width", 0.5)
+      .attr("rx", 3)        
+      .attr("ry", 3);
 
-    tooltip
-        .append("text")
-            .attr("class", "tooltip-price")
-            .attr("x", 8);
+  tooltip
+    .append("text")
+      .attr("class", "tooltip-date")
+      .attr("x", 8)
+      .attr("y", 9)
+      .attr("dominant-baseline", "hanging");
 
-};
+  tooltip
+    .append("text")
+      .attr("class", "tooltip-price")
+      .attr("x", 8)
+      .attr("y", 27)
+     .attr("dominant-baseline", "hanging");
 
-const handleMouseEvents = ({ innerChart, xScale, yScale }, data) => {
+}
 
-    const bisect = d3.bisector(d => d.Date).left;
+const handleMouseEvents = (data) => {
 
-    innerChart.selectAll(".area-path")
-        .on("mousemove", e => {
+  const bisect = d3.bisector(d => d.Date).left;
+  // https://d3js.org/d3-array/bisect allows to choose the nearest date
+  // .left returns the index to the left of it (i.e. that point itself).
 
-            const xPosition = d3.pointer(e)[0];
-            const date = xScale.invert(xPosition);
-            const index = bisect(data, date);
-            const d0 = data[index - 1];
-            const d1 = data[index];
-            const closest = !d0 ? d1 : !d1 ? d0 : date - d0.Date < d1.Date - date ? d0 : d1;
+  ureaInnerChart
+    .append("rect")
+      .attr("width", innerWidth)
+      .attr("height", innerHeight)
+      .attr("fill", "none")
+      .attr("pointer-events", "all")
+      .on("mousemove", e => {
 
-            const price = closest.Urea ?? closest.Crude;
-            const snappedX = xScale(closest.Date);
-            const priceY = yScale(price);
+        const xPos = d3.pointer(e)[0]; //d3.pointer(e)[0] — gives you the cursor's position in pixels (just the x axis, hence [0])
+        const hoveredDate = lineXScale.invert(xPos); // x scale normally converts dates → pixels. .invert goes backwards: pixels → date. to get the right data from the mouse hover
 
-            const d = closest.Date;
-            const isLeft = (d >= new Date(2021, 2, 1) && d < new Date(2022, 3, 1))
-                        || (d >= new Date(2025, 8, 1));
-            const xOffset = isLeft ? -8 : 8;
-            const anchor = isLeft ? "end" : "start";
+        // Snap to nearest data point
+        const index = bisect(data, hoveredDate); //bisect finds the insertion index for your hovered date.
+        const d0 = data[index - 1]; //index before
+        const d1 = data[index]; // index ahead
+        let d;
+        if (!d0) d = d1;
+        else if (!d1) d = d0;
+        else d = (hoveredDate - d0.Date) < (d1.Date - hoveredDate) ? d0 : d1;
+        // describes scenarios where you are at beginning of line chart i.e., !d0 doesn't exist - use d1
+        // !d1 doesn't exist, you are at the end of the chart - use d0
+        // both exist - pick whichever is mathematically closer to the cursor
 
-            innerChart.select(".tooltip")
-                .style("visibility", "visible")
-                .attr("transform", `translate(${snappedX}, 0)`);
+        d3.select(".tooltip")
+          .style("display", null) //makes toolip visible
+          .attr("transform", `translate(${lineXScale(d.Date)}, 0)`); // moves the tooltip to wherever your mouse is, by referencing the Date position not the cursor position
 
-            innerChart.select(".tooltip-year")
-                .attr("x", xOffset)
-                .attr("text-anchor", anchor)
-                .attr("y", priceY - 51)
-                .text(d3.timeFormat("%b %Y")(closest.Date));
+        d3.select(".tooltip-date").text(d3.timeFormat("%b %Y")(d.Date)); //adds the date to tooltip
+        d3.select(".tooltip-price").text(`$${d3.format(",.0f")(d.Urea)}/mt`); // adds the price to tooltip 
 
-            innerChart.select(".tooltip-price")
-                .attr("x", xOffset)
-                .attr("text-anchor", anchor)
-                .attr("y", priceY - 38)
-                .text(`${d3.format(",.0f")(price)} $/mt`);
-        })
-        .on("mouseleave", () => {
-            innerChart.select(".tooltip").style("visibility", "hidden");
-        });
+      })
+      .on("mouseleave", () => {
+        d3.select(".tooltip").style("display", "none"); // tooltip make to invisible when mouse leaves
+      });
 
-};
+}
+
+const createOilTooltip = () => {
+
+  const textColor = "#666";
+
+  const tooltip = oilInnerChart
+    .append("g")
+      .attr("class", "tooltip-oil")
+      .style("display", "none");
+
+  tooltip
+    .append("line")
+      .attr("x1", 0)
+      .attr("x2", 0)
+      .attr("y1", 0)
+      .attr("y2", innerHeight)
+      .attr("stroke", textColor)
+      .attr("stroke-width", 1)
+      .attr("stroke-dasharray", "4 4");
+
+  tooltip
+    .append("rect")
+      .attr("class", "tooltip-box")
+      .attr("x", 2)
+      .attr("y", 4)
+      .attr("width", 74)
+      .attr("height", 38)
+      .attr("fill", "white")
+      .attr("stroke", "#ccc")
+      .attr("stroke-width", 0.5)
+      .attr("rx", 3)
+      .attr("ry", 3);
+
+  tooltip
+    .append("text")
+      .attr("class", "tooltip-date-oil")
+      .attr("x", 8)
+      .attr("y", 9)
+      .attr("dominant-baseline", "hanging");
+
+  tooltip
+    .append("text")
+      .attr("class", "tooltip-price-oil")
+      .attr("x", 8)
+      .attr("y", 27)
+      .attr("dominant-baseline", "hanging");
+
+}
+
+const handleOilMouseEvents = (data) => {
+
+  const bisect = d3.bisector(d => d.DateOil).left;
+
+  oilInnerChart
+    .append("rect")
+      .attr("width", innerWidth)
+      .attr("height", innerHeight)
+      .attr("fill", "none")
+      .attr("pointer-events", "all")
+      .on("mousemove", e => {
+
+        const xPos = d3.pointer(e)[0];
+        const hoveredDate = oilXScale.invert(xPos);
+
+        const index = bisect(data, hoveredDate);
+        const d0 = data[index - 1];
+        const d1 = data[index];
+        let d;
+        if (!d0) d = d1;
+        else if (!d1) d = d0;
+        else d = (hoveredDate - d0.DateOil) < (d1.DateOil - hoveredDate) ? d0 : d1;
+
+        d3.select(".tooltip-oil")
+          .style("display", null)
+          .attr("transform", `translate(${oilXScale(d.DateOil)}, 0)`);
+
+        d3.select(".tooltip-date-oil").text(d3.timeFormat("%b %Y")(d.DateOil));
+        d3.select(".tooltip-price-oil").text(`$${d3.format(",.0f")(d.Crude)}/mt`);
+
+      })
+      .on("mouseleave", () => {
+        d3.select(".tooltip-oil").style("display", "none");
+      });
+
+}
+
