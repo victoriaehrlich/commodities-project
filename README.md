@@ -31,12 +31,13 @@ commodities project/
 ### Urea_prices2.csv
 - Date format: DD/MM/YYYY
 - Column: `Urea` (price in $/mt)
-- Source: World Bank Commodity Markets
+- Source: World Bank Commodity Markets - https://www.worldbank.org/en/research/commodity-markets
 
 ### Crude_prices.csv
 - Date format: MM/DD/YYYY (note: different order from the urea file)
-- Column: `Crude` (mapped from `d["Crude "]` — note trailing space in header — at parse time)
-- Source: World Bank Commodity Markets
+- Column: `Crude` (price in $)
+- Source: Macrotrends - https://www.macrotrends.net/1369/crude-oil-price-history-chart
+
 
 ### Commodities.csv
 - Combined dataset used for reference
@@ -155,10 +156,4 @@ Both charts include two annotated vertical lines:
 - HTML5 / CSS3
 - No build tools or bundlers - files are served directly
 
-## Sources
 
-https://tradingeconomics.com/commodity/urea 
-
-https://www.macrotrends.net/1369/crude-oil-price-history-chart
-
-https://www.worldbank.org/en/research/commodity-markets
