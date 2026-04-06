@@ -11,13 +11,15 @@ commodities project/
   data/
     Urea_prices2.csv       Monthly urea fertiliser prices ($/mt), World Bank
     Crude_prices.csv       Monthly crude oil prices ($/barrel), World Bank
+    Commodities.csv        Combined commodities dataset
   css/
-    main.css               All styles: layout, typography, chart elements, tooltip, toggle button
+    main.css               All styles: layout, typography, chart elements, tooltip
   js/
-    interactions.js        Shared tooltip logic used by both charts
-    line-chart.js          Draws the urea fertiliser line chart
-    line-chart oil.js      Draws the crude oil line chart
-    toggle.js              Handles switching between the two charts
+    shared-constants.js    Shared chart dimensions, colours, and global scale variables
+    load-data.js           Loads CSVs and calls draw/tooltip functions for each chart
+    line-chart-urea.js     Draws the urea fertiliser line chart
+    line-chart-oil.js      Draws the crude oil line chart
+    interactions.js        Tooltip logic for both charts
   index.html               Main page
   README.md                This file
 ```
@@ -33,37 +35,37 @@ commodities project/
 
 ### Crude_prices.csv
 - Date format: MM/DD/YYYY (note: different order from the urea file)
-- Column: `Crude ` (note: trailing space in the header - accessed with `d["Crude "]`)
+- Column: `Crude` (mapped from `d["Crude "]` — note trailing space in header — at parse time)
 - Source: World Bank Commodity Markets
+
+### Commodities.csv
+- Combined dataset used for reference
 
 ---
 
 ## JavaScript files
 
-### interactions.js
-Contains two functions used by both charts. It does not reference any global variables - instead, each chart passes its own context object.
+### shared-constants.js
+Defines all values shared across the chart files so they don't need to be repeated or passed around.
 
-**`createTooltip(ctx)`**
-Appends a tooltip group to the chart's `innerChart` element. The group contains:
-- A dashed vertical line spanning the full chart height
-- A `.tooltip-year` text element showing the hovered month and year
-- A `.tooltip-price` text element showing the price at that date
-
-The tooltip starts hidden and is only shown on mousemove.
-
-**`handleMouseEvents(ctx, data)`**
-Listens for `mousemove` and `mouseleave` on the `.area-path` element of a given chart. On mousemove it:
-1. Finds the closest data point to the cursor using `d3.bisector`
-2. Snaps the tooltip to that data point's x position
-3. Positions the text 38-51px above the data point on the y axis
-4. Flips the text to the left of the dashed line during periods of high prices (Mar 2021 to Apr 2022, and Sep 2025 onwards), and keeps it on the right otherwise
-
-The `ctx` object passed in must contain: `innerChart`, `xScale`, `yScale`.
+- `margin`, `width`, `height`, `innerWidth`, `innerHeight` — chart dimensions
+- `fertiliser` — aubergine colour (`#b52e5fff`) used for the urea chart
+- `Oil` — blue colour (`#315ed9ff`) used for the oil chart
+- `ureaInnerChart`, `oilInnerChart` — global references to each chart's inner `<g>` element, set inside the draw functions
+- `lineXScale`, `lineYScale`, `oilXScale`, `oilYScale` — global scale references, set inside each draw function and accessed by the interaction functions
 
 ---
 
-### line-chart.js
-Draws the urea fertiliser chart into `#line-chart`. All variables (`innerChart`, `xScale`, `yScale`, etc.) are local to the `drawLineChart` function. The function returns a context object which is passed to `createTooltip` and `handleMouseEvents`.
+### load-data.js
+Handles all CSV loading. Parses dates and numeric values, then calls the draw and tooltip functions in sequence.
+
+- Loads `Urea_prices2.csv` with `%d/%m/%Y` date format, then calls `drawLineChart`, `createTooltip`, and `handleMouseEvents`
+- Loads `Crude_prices.csv` with `%m/%d/%Y` date format, then calls `drawOilChart`, `createOilTooltip`, and `handleOilMouseEvents`
+
+---
+
+### line-chart-urea.js
+Draws the urea fertiliser chart into `#line-chart`. Sets the global variables `ureaInnerChart`, `lineXScale`, and `lineYScale` so the interaction functions can access them.
 
 Key elements drawn:
 - Grid lines (y axis only)
@@ -71,28 +73,42 @@ Key elements drawn:
 - y axis with default D3 ticks
 - Data points as small circles
 - A cardinal curve line
-- A gradient-filled area below the line
+- A gradient-filled area below the line (gradient ID: `area-gradient`)
 - Annotated event lines for the Russian invasion of Ukraine (Feb 2022) and US/Israel attacks on Iran (Feb 2026)
 
 ---
 
-### line-chart oil.js
-Draws the crude oil chart into `#oil-chart`. Follows the same pattern as `line-chart.js`. Uses its own `parseDateOil` function because the CSV date format differs from the urea file.
+### line-chart-oil.js
+Draws the crude oil chart into `#line-chart-oil`. Follows the same pattern as `line-chart-urea.js`. Sets the global variables `oilInnerChart`, `oilXScale`, and `oilYScale`.
 
 Differences from the urea chart:
 - Colour: blue (`#315ed9ff`) instead of aubergine
 - Gradient ID: `area-gradient-oil` (separate from `area-gradient` to avoid conflicts in the SVG defs)
-- Accesses data with `d.Crude` (mapped from `d["Crude "]` at parse time)
-- Uses `parseDateOil` with `%m/%d/%Y` format
+- Uses `d.DateOil` (mapped from `d.Date` at parse time in `load-data.js`)
 
 ---
 
-### toggle.js
-Handles switching between the two charts on the page. On load, only `#line-chart` is visible. When the button is clicked, the script:
-1. Flips a `showingUrea` boolean
-2. Shows or hides each chart div with `display: block/none`
-3. Updates the button label
-4. Updates the chart title paragraph above the chart
+### interactions.js
+Contains separate tooltip functions for each chart. Both charts use the same tooltip design: a dashed vertical line with a white rounded box showing the hovered month/year and price.
+
+**`createTooltip()`**
+Appends a tooltip group (`.tooltip`) to `ureaInnerChart`. The group contains:
+- A dashed vertical line spanning the full chart height
+- A white rounded rectangle (`.tooltip-box`)
+- A `.tooltip-date` text element showing the hovered month and year
+- A `.tooltip-price` text element showing the urea price
+
+**`handleMouseEvents(data)`**
+Appends an invisible overlay rect to `ureaInnerChart` to capture mouse events. On mousemove it:
+1. Finds the closest data point to the cursor using `d3.bisector` on `d.Date`
+2. Snaps the tooltip to that data point's x position
+3. Formats the date as "Mon YYYY" and the price as `$X/mt`
+
+**`createOilTooltip()`**
+Same as `createTooltip` but appends to `oilInnerChart` with classes `.tooltip-oil`, `.tooltip-date-oil`, and `.tooltip-price-oil`.
+
+**`handleOilMouseEvents(data)`**
+Same as `handleMouseEvents` but uses `d.DateOil` and `d.Crude`, and updates the `.tooltip-oil` group.
 
 ---
 
@@ -100,25 +116,24 @@ Handles switching between the two charts on the page. On load, only `#line-chart
 
 ### Layout classes
 - `.responsive-svg-container` - centres the article content, max-width 900px
-- `.chart-wrapper` - wraps both chart divs, set to `position: relative` so the toggle button can be positioned within it
+- `.about-week` - intro blog section above the charts
 
 ### Typography classes
 - `.section-title` - main article heading, Libre Baskerville serif
 - `.subtitle` - italic subheading below the main title
-- `.paragraph` - body text, Georgia serif, 14px
-- `.chart-title` - small label above the chart
-- `.source-note` - data source credit below the chart
+- `.paragraph` - body text, Georgia serif
+- `.paragraph-blog` - body text for the intro blog section
+- `.chart-title` - small label above each chart
+- `.source-note` - data source credit below each chart
 
 ### Chart element classes
 - `.axis-x`, `.axis-y` - tick and line styles for both axes
 - `.chart-label` - the small label rendered inside the SVG (e.g. "Urea prices ($/mt)")
 - `.grid` - horizontal grid lines, light grey
-- `.event-label` - annotation text for historical events, Arial 11px, grey
+- `.event-label` - annotation text for historical events
 - `.event-line` - dashed annotation line for historical events
-- `.tooltip-year`, `.tooltip-price` - tooltip text styles, matching `.event-label` but slightly darker (`#444`)
-
-### Toggle button
-- `.chart-toggle-btn` - positioned in the top-right corner of `.chart-wrapper`, styled to match the chart's type aesthetic
+- `.tooltip-date`, `.tooltip-price` - tooltip text styles for the urea chart
+- `.tooltip-date-oil`, `.tooltip-price-oil` - tooltip text styles for the oil chart
 
 ---
 
@@ -147,5 +162,3 @@ https://tradingeconomics.com/commodity/urea
 https://www.macrotrends.net/1369/crude-oil-price-history-chart
 
 https://www.worldbank.org/en/research/commodity-markets
-
-
