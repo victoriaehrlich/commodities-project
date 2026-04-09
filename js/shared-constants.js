@@ -12,4 +12,6 @@ let ureaInnerChart, oilInnerChart;
 
 // Scales set inside each draw function, available globally for interactions
 let lineXScale, lineYScale;
-let oilXScale, oilYScale;
+let oilXScale, oilYScale; 
+// write out the xScale here and only use one for urea and crude 
+// review chapter 5 for shared scale 

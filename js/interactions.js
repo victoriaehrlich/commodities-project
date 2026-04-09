@@ -17,11 +17,16 @@ const createTooltip = () => {
       .attr("stroke-width", 1)
       .attr("stroke-dasharray", "4 4");
 
-  tooltip
-    .append("rect")
+  const tooltip_box = tooltip
+    .append("g")
       .attr("class", "tooltip-box")
+      .style("display", "none")
+
+  tooltip_box
+    .append("rect")
+      .attr("class", "tooltip-rect")
       .attr("x", 2)          // small offset from  line
-      .attr("y", 4)          // small offset from  top
+      .attr("y", 4)          // small offset from  top -- reference the y scale 
       .attr("width", 74)     
       .attr("height", 38)    
       .attr("fill", "white")
@@ -30,14 +35,14 @@ const createTooltip = () => {
       .attr("rx", 3)        
       .attr("ry", 3);
 
-  tooltip
+  tooltip_box // wrap the text into the box 
     .append("text")
       .attr("class", "tooltip-date")
       .attr("x", 8)
       .attr("y", 9)
       .attr("dominant-baseline", "hanging");
 
-  tooltip
+  tooltip_box
     .append("text")
       .attr("class", "tooltip-price")
       .attr("x", 8)
@@ -79,6 +84,10 @@ const handleMouseEvents = (data) => {
           .style("display", null) //makes toolip visible
           .attr("transform", `translate(${lineXScale(d.Date)}, 0)`); // moves the tooltip to wherever your mouse is, by referencing the Date position not the cursor position
 
+        d3.select(".tooltip-box")
+          .style("display", null) //makes toolip visible
+          .attr("transform", `translate(0, ${lineYScale(d.Urea) - 50})`); // makes the tooltip box dynamic and responding to the Urea cost
+
         d3.select(".tooltip-date").text(d3.timeFormat("%b %Y")(d.Date)); //adds the date to tooltip
         d3.select(".tooltip-price").text(`$${d3.format(",.0f")(d.Urea)}/mt`); // adds the price to tooltip 
 
@@ -108,9 +117,14 @@ const createOilTooltip = () => {
       .attr("stroke-width", 1)
       .attr("stroke-dasharray", "4 4");
 
-  tooltip
+  const tooltip_box = tooltip
+    .append("g")
+      .attr("class", "tooltip-box-oil")
+      .style("display", "none")
+
+  tooltip_box
     .append("rect")
-      .attr("class", "tooltip-box")
+      .attr("class", "tooltip-rect")
       .attr("x", 2)
       .attr("y", 4)
       .attr("width", 74)
@@ -121,14 +135,14 @@ const createOilTooltip = () => {
       .attr("rx", 3)
       .attr("ry", 3);
 
-  tooltip
+  tooltip_box
     .append("text")
       .attr("class", "tooltip-date-oil")
       .attr("x", 8)
       .attr("y", 9)
       .attr("dominant-baseline", "hanging");
 
-  tooltip
+  tooltip_box
     .append("text")
       .attr("class", "tooltip-price-oil")
       .attr("x", 8)
@@ -163,6 +177,10 @@ const handleOilMouseEvents = (data) => {
         d3.select(".tooltip-oil")
           .style("display", null)
           .attr("transform", `translate(${oilXScale(d.DateOil)}, 0)`);
+        
+        d3.select(".tooltip-box-oil")
+          .style("display", null)
+          .attr("transform", `translate(0, ${oilYScale(d.Crude)- 50 })`);
 
         d3.select(".tooltip-date-oil").text(d3.timeFormat("%b %Y")(d.DateOil));
         d3.select(".tooltip-price-oil").text(`$${d3.format(",.0f")(d.Crude)}/mt`);
