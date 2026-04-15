@@ -197,35 +197,41 @@ const handleOilMouseEvents = (data) => {
 
 let showingOil = false; 
 
-const setupToggle = () => { // the grab HTML elements in the html file, they exist when the page loads 
+const setupToggle = () => { // the grab HTML elements in the html file, they exist when the page loads
     const button       = document.getElementById("toggleOverlay");
     const ureaChart    = document.getElementById("line-chart");
     const oilChart     = document.getElementById("line-chart-oil");
+    const ureaSource   = document.getElementById("source-urea");
+    const oilSource    = document.getElementById("source-oil");
     const titles       = document.querySelectorAll(".chart-title"); // calls both titles in this class (there's only two)
     const ureaTitle    = titles[0];   // "Monthly global urea fertiliser prices" index title order
     const oilTitle     = titles[1];   // "Monthly global crude oil prices"
 
     // hide oil chart and its title to start
-    oilChart.style.display  = "none"; //removes element from the page 
+    oilChart.style.display  = "none"; //removes element from the page
     oilTitle.style.display  = "none";
 
     button.addEventListener("click", () => {
         showingOil = !showingOil; //every click flips the let showingOil button to the opposit
 
         if (showingOil) {
-            ureaChart.style.display = "none";
-            ureaTitle.style.display = "none";
-            oilChart.style.display  = "";
-            oilTitle.style.display  = "";
+            ureaChart.style.display  = "none";
+            ureaTitle.style.display  = "none";
+            ureaSource.style.display = "none";
+            oilChart.style.display   = "";
+            oilTitle.style.display   = "";
+            oilSource.style.display  = "";
             oilTitle.after(button);  // move button to sit after the oil title
-            button.textContent      = "Urea prices";
+            button.textContent       = "Urea prices";
         } else {
-            ureaChart.style.display = "";
-            ureaTitle.style.display = "";
-            oilChart.style.display  = "none";
-            oilTitle.style.display  = "none";
+            ureaChart.style.display  = "";
+            ureaTitle.style.display  = "";
+            ureaSource.style.display = "";
+            oilChart.style.display   = "none";
+            oilTitle.style.display   = "none";
+            oilSource.style.display  = "none";
             ureaTitle.after(button);  // move button back to after the urea title
-            button.textContent      = "Oil prices";
+            button.textContent       = "Oil prices";
         }
     });
 };
