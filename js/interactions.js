@@ -183,7 +183,7 @@ const handleOilMouseEvents = (data) => {
           .attr("transform", `translate(0, ${oilYScale(d.Crude)- 50 })`);
 
         d3.select(".tooltip-date-oil").text(d3.timeFormat("%b %Y")(d.DateOil));
-        d3.select(".tooltip-price-oil").text(`$${d3.format(",.0f")(d.Crude)}/mt`);
+        d3.select(".tooltip-price-oil").text(`$${d3.format(",.0f")(d.Crude)}/barrel`);
 
       })
       .on("mouseleave", () => {

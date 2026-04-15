@@ -6,6 +6,8 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Weekly Chart #4 Commodities Prices</title>
 	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="stylesheet" type="text/css" href="css/line-charts.css">
+	<link rel="stylesheet" type="text/css" href="css/bar-chart.css">
 </head>
 
 <body>
@@ -86,6 +88,8 @@
 			Monthly global urea fertiliser prices ($/mt)
 		</p>
 
+		<button id="toggleOverlay"> Oil prices </button>
+
 		<div id="line-chart"></div>
 
 		<div class="source-note">
@@ -96,22 +100,21 @@
 		</div>
 
 		<p class="paragraph">
-				The timing feels familiar. Russia's invasion of Ukraine in February 2022 
-				triggered simultaneous shocks across both markets - oil prices spiked, 
-				gas supplies tightened, and fertiliser costs surged just as farmers across 
-				the northern hemisphere were preparing for the planting season. The same 
-				pressure is building now, and with it the same downstream risk: if fertiliser 
-				becomes too expensive or too scarce, farmers adjust what they plant and how 
+				The timing feels familiar. Russia's invasion of Ukraine in February 2022
+				triggered simultaneous shocks across both markets - oil prices spiked,
+				gas supplies tightened, and fertiliser costs surged just as farmers across
+				the northern hemisphere were preparing for the planting season. The same
+				pressure is building now, and with it the same downstream risk: if fertiliser
+				becomes too expensive or too scarce, farmers adjust what they plant and how
 				much - and that ripples through food supply months later.
 			</p>
 
 			<p class="paragraph">
-				But the two commodities transmit their shocks differently. An oil price spike 
-				is felt quickly - in transport, energy bills, and production costs within weeks. 
-				Fertiliser works on a slower clock. Farmers commit to their inputs before the 
-				growing season begins, so a price surge in spring can quietly reduce yields 
-				by autumn. Both charts tell part of the same story — one fast-moving, one 
-				slow-burning.
+				But the two commodities transmit their shocks differently. An oil price spike
+				is felt quickly - in transport, energy bills, and production costs within weeks.
+				Fertiliser works on a slower clock. Farmers commit to their inputs before the
+				growing season begins, so a price surge in spring can quietly reduce yields
+				by autumn. 
 			</p>
 
 		<p class="chart-title">
@@ -120,7 +123,28 @@
 
 		<div id="line-chart-oil"></div>
 
+		<p class="paragraph">
+				The countries most vulnerable to these swings are those whose entire economies are built on oil revenues. 
+				When prices spike or supply is disrupted, the shock is not just felt at the petrol pump - 
+				it ripples through national budgets, public spending, and political stability. 
+				And several of those countries sit in the same region that is now at the centre of the current crisis.
+			</p>
+			
+		<p class="chart-title">
+			Top 10 countries by oil rents as a share of GDP, 2021 (%)
+		</p>
+		<p class="chart-subtitle">Four of the top ten - Iraq, Saudi Arabia, Oman and Iran - sit at the heart of Middle Eastern oil supply</p>
+
+		<div id="bar-chart"></div>
+
 		<div class="source-note">
+			Data source:
+			<a href="https://ourworldindata.org/grapher/oil-rents-as-a-share-of-gdp">
+				ourworldindata.org
+			</a>
+		</div>
+
+				<div class="source-note">
 			Website:
 			<a href="https://victoriaehrlichadam.my.canva.site/studiodotti/blog">
 				victoriaehrlichadam.my.canva.site/studiodotti
@@ -135,5 +159,6 @@
 	<script src="js/interactions.js"></script>
 	<script src="js/load-data.js"></script>
 	<script src="js/line-chart-oil.js"></script>
+	<script src="js/bar-chart.js"></script>
 </body>
 </html>

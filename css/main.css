@@ -1,4 +1,6 @@
-.responsive-svg-container{
+/* ── Shared container ────────────────────────────────────────── */
+
+.responsive-svg-container {
   margin-left: auto;
   margin-right: auto;
   width: 100%;
@@ -6,7 +8,8 @@
   text-align: left;
 }
 
-/* Intro / About section */
+/* ── Intro / About section ───────────────────────────────────── */
+
 .about-week {
   width: 100%;
   max-width: 900px;
@@ -15,7 +18,7 @@
   text-align: left;
 }
 
-.about-label{
+.about-label {
   font-family: 'Inter', sans-serif;
   font-size: 20px;
   font-weight: 600;
@@ -25,8 +28,7 @@
   margin: 0 0 14px 0;
 }
 
-
-.paragraph-blog{
+.paragraph-blog {
   font-family: 'Inter', sans-serif;
   font-size: 14px;
   line-height: 1.75;
@@ -35,8 +37,9 @@
   margin: 0 0 16px 0;
 }
 
-/* divider between intro and article */
-.article-start{
+/* ── Divider between intro and article ──────────────────────── */
+
+.article-start {
   width: 100%;
   max-width: 900px;
   margin: 0 auto 36px auto;
@@ -44,8 +47,9 @@
   border-top: 1px solid #ececec;
 }
 
-/* Main article */
-.section-title{
+/* ── Main article typography ─────────────────────────────────── */
+
+.section-title {
   font-family: 'Libre Baskerville', serif;
   font-size: 44px;
   line-height: 1.1;
@@ -56,17 +60,17 @@
   text-align: left;
 }
 
-.subtitle{
+.subtitle {
   font-family: 'Libre Baskerville', serif;
   font-size: 20px;
-  font-style: italic;     
-  font-weight: 400;       
+  font-style: italic;
+  font-weight: 400;
   max-width: 900px;
   margin: 20px auto;
   text-align: left;
 }
 
-.paragraph{
+.paragraph {
   max-width: 900px;
   margin: 30px auto;
   font-family: Georgia, serif;
@@ -76,7 +80,7 @@
   color: #333;
 }
 
-.chart-title{
+.chart-title {
   font-family: 'Inter', sans-serif;
   font-size: 13px;
   font-weight: 500;
@@ -87,7 +91,7 @@
   text-align: left;
 }
 
-.source-note{
+.source-note {
   max-width: 900px;
   margin: 10px auto 40px auto;
   font-family: Georgia, serif;
@@ -96,75 +100,6 @@
   text-align: left;
 }
 
-.source-note a{
+.source-note a {
   color: #444;
-}
-
-/* Chart / axis styles */
-.axis-x path,
-.axis-y path {
-  stroke: #666;
-}
-
-.axis-x line,
-.axis-y line {
-  stroke: #666;
-}
-
-.axis-x,
-.axis-y{
-  font-family: 'Inter', sans-serif;
-  font-size: 11px;
-  color: #666;
-}
-
-.chart-label{
-  font-family: 'Inter', sans-serif;
-  font-size: 12px;
-  fill: #444;
-}
-
-.data-note{
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  font-weight: 400;
-  font-style: normal;
-}
-
-.grid line {
-  stroke: #e8e8e8;
-  stroke-width: 0.7;
-}
-
-.grid path {
-  display: none;
-}
-
-.event-label{
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 11px;
-  fill: #666;
-}
-
-.event-line{
-  stroke: #777;
-  stroke-width: 1;
-  stroke-dasharray: 4 4;
-}
-
-
-
-/* tooltip */
-
-.tooltip-label{
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 12px;
-  fill: #f7f7f7;
-}
-
-.tooltip-date, .tooltip-date-oil,
-.tooltip-price, .tooltip-price-oil {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 11px;
-  fill: #444;
 }

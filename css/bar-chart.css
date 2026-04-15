@@ -1,0 +1,29 @@
+/* ── Chart subtitle (italic, below chart title) ──────────────── */
+
+.chart-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-style: italic;
+  color: #777;
+  max-width: 900px;
+  margin: -10px auto 14px auto;
+  text-align: left;
+}
+
+/* ── Country name labels (left of each bar) ──────────────────── */
+/* Matches .chart-label in line-charts.css: Inter, 12px, #444   */
+
+.bar-country {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  fill: #444;
+}
+
+/* ── Value labels (right of each bar) ───────────────────────── */
+/* Matches axis tick style: Inter, 11px, muted grey             */
+
+.bar-value {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  fill: #777;
+}
