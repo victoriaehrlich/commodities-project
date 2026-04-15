@@ -11,7 +11,6 @@
 }
 
 /* ── Country name labels (left of each bar) ──────────────────── */
-/* Matches .chart-label in line-charts.css: Inter, 12px, #444   */
 
 .bar-country {
   font-family: 'Inter', sans-serif;
@@ -20,7 +19,6 @@
 }
 
 /* ── Value labels (right of each bar) ───────────────────────── */
-/* Matches axis tick style: Inter, 11px, muted grey             */
 
 .bar-value {
   font-family: 'Inter', sans-serif;

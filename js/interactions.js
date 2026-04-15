@@ -192,3 +192,42 @@ const handleOilMouseEvents = (data) => {
 
 }
 
+
+// this section covers the button interactions to mvoe betwene line and oil chart // 
+
+let showingOil = false; 
+
+const setupToggle = () => { // the grab HTML elements in the html file, they exist when the page loads 
+    const button       = document.getElementById("toggleOverlay");
+    const ureaChart    = document.getElementById("line-chart");
+    const oilChart     = document.getElementById("line-chart-oil");
+    const titles       = document.querySelectorAll(".chart-title"); // calls both titles in this class (there's only two)
+    const ureaTitle    = titles[0];   // "Monthly global urea fertiliser prices" index title order
+    const oilTitle     = titles[1];   // "Monthly global crude oil prices"
+
+    // hide oil chart and its title to start
+    oilChart.style.display  = "none"; //removes element from the page 
+    oilTitle.style.display  = "none";
+
+    button.addEventListener("click", () => {
+        showingOil = !showingOil; //every click flips the let showingOil button to the opposit
+
+        if (showingOil) {
+            ureaChart.style.display = "none";
+            ureaTitle.style.display = "none";
+            oilChart.style.display  = "";
+            oilTitle.style.display  = "";
+            oilTitle.after(button);  // move button to sit after the oil title
+            button.textContent      = "Urea prices";
+        } else {
+            ureaChart.style.display = "";
+            ureaTitle.style.display = "";
+            oilChart.style.display  = "none";
+            oilTitle.style.display  = "none";
+            ureaTitle.after(button);  // move button back to after the urea title
+            button.textContent      = "Oil prices";
+        }
+    });
+};
+
+setupToggle(); // then you just call the function at the end 
