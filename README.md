@@ -12,14 +12,19 @@ commodities project/
     Urea_prices2.csv       Monthly urea fertiliser prices ($/mt), World Bank
     Crude_prices.csv       Monthly crude oil prices ($/barrel), World Bank
     Commodities.csv        Combined commodities dataset
+    oil-gdp.csv            Oil rents as a share of GDP by country, Our World in Data
+    oil-all-years.csv      Extended oil price history
   css/
-    main.css               All styles: layout, typography, chart elements, tooltip
+    main.css               Layout, typography, and shared page styles
+    line-charts.css        Axis, grid, tooltip, and annotation styles for the line charts
+    bar-chart.css          Styles specific to the bar chart
   js/
     shared-constants.js    Shared chart dimensions, colours, and global scale variables
     load-data.js           Loads CSVs and calls draw/tooltip functions for each chart
     line-chart-urea.js     Draws the urea fertiliser line chart
     line-chart-oil.js      Draws the crude oil line chart
-    interactions.js        Tooltip logic for both charts
+    interactions.js        Tooltip logic for both charts and toggle button logic
+    bar-chart.js           Draws the oil rents bar chart
   index.html               Main page
   README.md                This file
 ```
@@ -38,9 +43,16 @@ commodities project/
 - Column: `Crude` (price in $/barrel)
 - Source: Macrotrends - https://www.macrotrends.net/1369/crude-oil-price-history-chart
 
-
 ### Commodities.csv
 - Combined dataset used for reference
+
+### oil-gdp.csv
+- Columns: `Entity` (country name), `of_GDP` (oil rents as % of GDP)
+- Used by the bar chart to show the top 10 countries by oil rent share, 2021
+- Source: Our World in Data - https://ourworldindata.org/grapher/oil-rents-as-a-share-of-gdp
+
+### oil-all-years.csv
+- Extended oil price history, available for reference
 
 ---
 
@@ -90,7 +102,7 @@ Differences from the urea chart:
 ---
 
 ### interactions.js
-Contains separate tooltip functions for each chart. Both charts use the same tooltip design: a dashed vertical line with a white rounded box showing the hovered month/year and price.
+Contains tooltip functions for each chart and the toggle button logic.
 
 **`createTooltip()`**
 Appends a tooltip group (`.tooltip`) to `ureaInnerChart`. The group contains:
@@ -111,36 +123,65 @@ Same as `createTooltip` but appends to `oilInnerChart` with classes `.tooltip-oi
 **`handleOilMouseEvents(data)`**
 Same as `handleMouseEvents` but uses `d.DateOil` and `d.Crude`, and updates the `.tooltip-oil` group.
 
+**`setupToggle()`**
+Controls the button that switches between the urea and oil line charts. On page load it hides the oil chart and its title. On each click it:
+1. Flips a `showingOil` boolean
+2. Toggles `display` on both chart divs and their titles
+3. Moves the button in the DOM so it always sits below whichever chart title is active
+4. Updates the button label ("Oil prices" / "Urea prices")
+
 ---
 
-## CSS - main.css
+### bar-chart.js
+Loads `oil-gdp.csv`, sorts countries by oil rent descending, and draws a horizontal bar chart of the top 10 into `#bar-chart`. Uses the shared `margin`, `width`, `height`, and `innerHeight` constants from `shared-constants.js`.
 
-### Layout classes
-- `.responsive-svg-container` - centres the article content, max-width 900px
-- `.about-week` - intro blog section above the charts
+Key elements drawn:
+- Vertical gridlines along the x axis
+- Horizontal bars with full opacity for Middle Eastern countries (Iraq, Saudi Arabia, Oman, Iran) and reduced opacity for others
+- Country name labels to the left of each bar
+- Percentage value labels to the right of each bar
+- A vertical baseline at the left edge of the bars
 
-### Typography classes
-- `.section-title` - main article heading, Libre Baskerville serif
-- `.subtitle` - italic subheading below the main title
-- `.paragraph` - body text, Georgia serif
-- `.paragraph-blog` - body text for the intro blog section
-- `.chart-title` - small label above each chart
-- `.source-note` - data source credit below each chart
+---
 
-### Chart element classes
-- `.axis-x`, `.axis-y` - tick and line styles for both axes
-- `.chart-label` - the small label rendered inside the SVG (e.g. "Urea prices ($/mt)")
-- `.grid` - horizontal grid lines, light grey
-- `.event-label` - annotation text for historical events
-- `.event-line` - dashed annotation line for historical events
-- `.tooltip-date`, `.tooltip-price` - tooltip text styles for the urea chart
-- `.tooltip-date-oil`, `.tooltip-price-oil` - tooltip text styles for the oil chart
+## CSS files
+
+### main.css
+Page-level layout and typography.
+
+- `.responsive-svg-container` — centres the article content, max-width 900px
+- `.about-week` — intro blog section above the charts
+- `.about-label` — small uppercase section label
+- `.paragraph-blog` — body text for the intro section
+- `.article-start` — the `<hr>` divider between intro and article
+- `.section-title` — main article heading, Libre Baskerville serif
+- `.subtitle` — italic subheading below the main title
+- `.paragraph` — body text, Georgia serif
+- `.chart-title` — small label above each chart
+- `.source-note` — data source credit below each chart
+
+### line-charts.css
+Styles scoped to the line chart SVG elements.
+
+- `.axis-x`, `.axis-y` — tick and line styles for both axes
+- `.chart-label` — the small label rendered inside the SVG (e.g. "Urea prices ($/mt)")
+- `.grid` — horizontal grid lines, light grey
+- `.event-label` — annotation text for historical events
+- `.event-line` — dashed annotation line for historical events
+- `.tooltip-date`, `.tooltip-price` — tooltip text styles for the urea chart
+- `.tooltip-date-oil`, `.tooltip-price-oil` — tooltip text styles for the oil chart
+
+### bar-chart.css
+Styles scoped to the bar chart SVG elements.
+
+- `.bar-country` — country name labels
+- `.bar-value` — percentage value labels to the right of each bar
 
 ---
 
 ## Event annotations
 
-Both charts include two annotated vertical lines:
+Both line charts include two annotated vertical lines:
 
 | Event | Date |
 |---|---|
@@ -155,5 +196,3 @@ Both charts include two annotated vertical lines:
 - Vanilla JavaScript (ES6)
 - HTML5 / CSS3
 - No build tools or bundlers - files are served directly
-
-
