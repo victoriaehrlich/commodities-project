@@ -124,11 +124,10 @@ Same as `createTooltip` but appends to `oilInnerChart` with classes `.tooltip-oi
 Same as `handleMouseEvents` but uses `d.DateOil` and `d.Crude`, and updates the `.tooltip-oil` group.
 
 **`setupToggle()`**
-Controls the button that switches between the urea and oil line charts. On page load it hides the oil chart and its title. On each click it:
-1. Flips a `showingOil` boolean
-2. Toggles `display` on both chart divs and their titles
-3. Moves the button in the DOM so it always sits below whichever chart title is active
-4. Updates the button label ("Oil prices" / "Urea prices")
+Controls the two buttons that switch between the urea and oil line charts. On page load it hides the oil chart and its title (urea is shown by default). Each button has its own click handler that:
+1. Toggles `display` on both chart divs, their titles, and their source notes
+2. Adds the `.active` class to the clicked button and removes it from the other
+3. The `.active` class triggers a coloured background — rose for Urea prices, blue for Oil prices — with white text. The inactive button falls back to light grey with black text.
 
 ---
 
@@ -159,6 +158,11 @@ Page-level layout and typography.
 - `.paragraph` — body text, Georgia serif
 - `.chart-title` — small label above each chart
 - `.source-note` — data source credit below each chart
+- `.chart-header` — wrapper for the chart title and button row
+- `.chart-buttons` — flex row holding the two toggle buttons
+- `.chart-btn` — shared base style for both buttons (light grey, black text)
+- `#btnUrea.active` — rose background (`#b52e5f`) with white text, applied when urea chart is active
+- `#btnOil.active` — blue background (`#315ed9`) with white text, applied when oil chart is active
 
 ### line-charts.css
 Styles scoped to the line chart SVG elements.

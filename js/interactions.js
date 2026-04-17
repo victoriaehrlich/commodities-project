@@ -193,47 +193,50 @@ const handleOilMouseEvents = (data) => {
 }
 
 
-// this section covers the button interactions to mvoe betwene line and oil chart // 
+// Button toggle — switches between the urea and oil line charts //
+// Two buttons sit permanently in the chart header. Only the active one
+// gets a coloured background (urea: rose, oil: blue). The inactive button
+// falls back to the default grey style defined in main.css.
 
-let showingOil = false; 
+const setupToggle = () => {
 
-const setupToggle = () => { // the grab HTML elements in the html file, they exist when the page loads
-    const button       = document.getElementById("toggleOverlay");
-    const ureaChart    = document.getElementById("line-chart");
-    const oilChart     = document.getElementById("line-chart-oil");
-    const ureaSource   = document.getElementById("source-urea");
-    const oilSource    = document.getElementById("source-oil");
-    const titles       = document.querySelectorAll(".chart-title"); // calls both titles in this class (there's only two)
-    const ureaTitle    = titles[0];   // "Monthly global urea fertiliser prices" index title order
-    const oilTitle     = titles[1];   // "Monthly global crude oil prices"
+    // Grab the two buttons and all chart elements that need to show/hide
+    const btnUrea    = document.getElementById("btnUrea");
+    const btnOil     = document.getElementById("btnOil");
+    const ureaChart  = document.getElementById("line-chart");
+    const oilChart   = document.getElementById("line-chart-oil");
+    const ureaSource = document.getElementById("source-urea");
+    const oilSource  = document.getElementById("source-oil");
+    const ureaTitle  = document.getElementById("urea-chart-title");
+    const oilTitle   = document.getElementById("oil-chart-title");
 
-    // hide oil chart and its title to start
-    oilChart.style.display  = "none"; //removes element from the page
-    oilTitle.style.display  = "none";
+    // Oil chart is hidden on page load — urea is shown by default
+    oilChart.style.display = "none";
+    oilTitle.style.display = "none";
 
-    button.addEventListener("click", () => {
-        showingOil = !showingOil; //every click flips the let showingOil button to the opposit
+    // Clicking "Urea prices" shows the urea chart and marks it active
+    btnUrea.addEventListener("click", () => {
+        ureaChart.style.display  = "";
+        ureaTitle.style.display  = "";
+        ureaSource.style.display = "";
+        oilChart.style.display   = "none";
+        oilTitle.style.display   = "none";
+        oilSource.style.display  = "none";
+        btnUrea.classList.add("active");    // apply rose highlight
+        btnOil.classList.remove("active");  // remove blue highlight
+    });
 
-        if (showingOil) {
-            ureaChart.style.display  = "none";
-            ureaTitle.style.display  = "none";
-            ureaSource.style.display = "none";
-            oilChart.style.display   = "";
-            oilTitle.style.display   = "";
-            oilSource.style.display  = "";
-            oilTitle.after(button);  // move button to sit after the oil title
-            button.textContent       = "Urea prices";
-        } else {
-            ureaChart.style.display  = "";
-            ureaTitle.style.display  = "";
-            ureaSource.style.display = "";
-            oilChart.style.display   = "none";
-            oilTitle.style.display   = "none";
-            oilSource.style.display  = "none";
-            ureaTitle.after(button);  // move button back to after the urea title
-            button.textContent       = "Oil prices";
-        }
+    // Clicking "Oil prices" shows the oil chart and marks it active
+    btnOil.addEventListener("click", () => {
+        ureaChart.style.display  = "none";
+        ureaTitle.style.display  = "none";
+        ureaSource.style.display = "none";
+        oilChart.style.display   = "";
+        oilTitle.style.display   = "";
+        oilSource.style.display  = "";
+        btnOil.classList.add("active");     // apply blue highlight
+        btnUrea.classList.remove("active"); // remove rose highlight
     });
 };
 
-setupToggle(); // then you just call the function at the end 
+setupToggle();
