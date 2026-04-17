@@ -1,5 +1,5 @@
 const barBlue = "#4682b4";
-const middleEast = new Set(["Iraq", "Saudi Arabia", "Oman", "Iran"]);
+//const middleEast = new Set(["Iraq", "Saudi Arabia", "Oman", "Iran"]);
 
 
 // A promise all to handle the loading of two datasets
@@ -30,7 +30,8 @@ function createVis(world, rent) {
   // Scales
   const CountryColourScale = d3.scaleSequential() // Colour scale for used for both the bars and the map
           .domain([10,60])
-          .interpolator(d3.interpolateYlGnBu); // // Used to tailor the colour specturm, this is usually the default one. could interpolate just the blue
+          .interpolator(d3.interpolateYlGnBu);
+         //.interpolator(d3.interpolateRgbBasis(["#d5dadfff", "#4682b4", "#08306b"])); // light blue → mid blue → dark navy
 
   
   const svg = d3.select("#bar-chart")
@@ -79,7 +80,8 @@ function createVis(world, rent) {
         .attr("width", d => xScale(d.Oil_rent) - labelColWidth)
         .attr("height", yScale.bandwidth())
         .attr("fill", d=> CountryColourScale(d.Oil_rent))
-        .attr("fill-opacity", d => middleEast.has(d.Country) ? 1 : 0.4)
+        .attr("fill-opacity", 0.7)
+        //.attr("fill-opacity", d => middleEast.has(d.Country) ? 1 : 0.4)
         .attr("rx", 2)
         .attr("ry", 2);
 
@@ -138,9 +140,9 @@ worldMap.selectAll(".country-path")
     .join("path")
         .attr("class", "country-path")
         .attr("d", geoPathGenerator) // drawing a path using the generator above. All the cordinaes part - "geometry":{"type":"MultiPolygon","coordinates":[[[
-        .attr("fill", d =>  d.properties.Oil_rent > 0 ? CountryColourScale(d.properties.Oil_rent) : "#ccc" ) // Fill based on the condition that oils_rent is bigger than 0, all countries apart from the top 10 will be 0 because of the const match part in the above loop
+        .attr("fill", d =>  d.properties.Oil_rent > 0 ? CountryColourScale(d.properties.Oil_rent) : "#e2dfdfff" ) // Fill based on the condition that oils_rent is bigger than 0, all countries apart from the top 10 will be 0 because of the const match part in the above loop
         .attr("fill-opacity", 0.8)
-        .attr("stroke", "black")
+        .attr("stroke", "#afaeaeff" )
         .attr("stroke-opacity", 1);
 
 }
