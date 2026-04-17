@@ -10,21 +10,22 @@ A data visualisation project built with D3.js v7, exploring global urea fertilis
 commodities project/
   data/
     Urea_prices2.csv       Monthly urea fertiliser prices ($/mt), World Bank
-    Crude_prices.csv       Monthly crude oil prices ($/barrel), World Bank
+    Crude_prices.csv       Monthly crude oil prices ($/barrel), Macrotrends
     Commodities.csv        Combined commodities dataset
     oil-gdp.csv            Oil rents as a share of GDP by country, Our World in Data
     oil-all-years.csv      Extended oil price history
+    world.json             GeoJSON world map (country boundaries and names)
   css/
     main.css               Layout, typography, and shared page styles
     line-charts.css        Axis, grid, tooltip, and annotation styles for the line charts
-    bar-chart.css          Styles specific to the bar chart
+    bar-chart.css          Styles specific to the bar chart and map
   js/
     shared-constants.js    Shared chart dimensions, colours, and global scale variables
     load-data.js           Loads CSVs and calls draw/tooltip functions for each chart
     line-chart-urea.js     Draws the urea fertiliser line chart
     line-chart-oil.js      Draws the crude oil line chart
     interactions.js        Tooltip logic for both charts and toggle button logic
-    bar-chart.js           Draws the oil rents bar chart
+    bar-chart.js           Draws the oil rents bar chart and world choropleth map
   index.html               Main page
   README.md                This file
 ```
@@ -53,6 +54,12 @@ commodities project/
 
 ### oil-all-years.csv
 - Extended oil price history, available for reference
+
+### world.json
+- GeoJSON file containing country boundaries and properties for every country in the world
+- Each feature has a `properties.name` field (e.g. `"Iraq"`) that is matched against the `Country` column in `oil-gdp.csv` to join oil rent values onto the map
+- Used by `bar-chart.js` to render the choropleth world map alongside the bar chart
+- Source: standard Natural Earth / TopoJSON-derived world atlas
 
 ---
 
@@ -132,14 +139,25 @@ Controls the two buttons that switch between the urea and oil line charts. On pa
 ---
 
 ### bar-chart.js
-Loads `oil-gdp.csv`, sorts countries by oil rent descending, and draws a horizontal bar chart of the top 10 into `#bar-chart`. Uses the shared `margin`, `width`, `height`, and `innerHeight` constants from `shared-constants.js`.
+Uses `Promise.all` to load both `data/world.json` and `data/oil-gdp.csv` in parallel, then calls `createVis(world, top10)` once both are ready. Sorts countries by oil rent descending and slices the top 10. Uses the shared `margin`, `width`, `height`, and `innerHeight` constants from `shared-constants.js`.
 
-Key elements drawn:
+A single `CountryColourScale` (`d3.scaleSequential` with `d3.interpolateYlGnBu`, domain 10–60) is shared between the bar chart and the map so both visuals use the same colour encoding.
+
+The SVG is split into two halves side by side:
+
+**Left half — horizontal bar chart**
 - Vertical gridlines along the x axis
-- Horizontal bars with full opacity for Middle Eastern countries (Iraq, Saudi Arabia, Oman, Iran) and reduced opacity for others
+- Horizontal bars coloured by `CountryColourScale`
 - Country name labels to the left of each bar
 - Percentage value labels to the right of each bar
 - A vertical baseline at the left edge of the bars
+
+**Right half — world choropleth map**
+- Appended as a `<g class="world">` translated to the midpoint of the SVG (`translate(500, 0)`)
+- Uses `d3.geoMercator` projection, scaled and centred to fit the right half
+- Uses `d3.geoPath` to draw each country outline as a `<path class="country-path">`
+- Before drawing, loops through `world.features` and joins `Oil_rent` values from the top-10 data onto each country's `properties` object (unmatched countries get `Oil_rent: 0`)
+- Countries with `Oil_rent > 0` (i.e. the top 10) are filled using `CountryColourScale`; all other countries are filled with a neutral grey (`#e2dfdfff`)
 
 ---
 
@@ -176,9 +194,10 @@ Styles scoped to the line chart SVG elements.
 - `.tooltip-date-oil`, `.tooltip-price-oil` — tooltip text styles for the oil chart
 
 ### bar-chart.css
-Styles scoped to the bar chart SVG elements.
+Styles scoped to the bar chart and map visual.
 
-- `.bar-country` — country name labels
+- `.chart-subtitle` — italic caption below the chart title (used for the bar chart subtitle in the article)
+- `.bar-country` — country name labels to the left of each bar
 - `.bar-value` — percentage value labels to the right of each bar
 
 ---
