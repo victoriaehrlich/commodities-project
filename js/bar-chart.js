@@ -6,7 +6,7 @@ const barBlue = "#4682b4";
 Promise.all([
   d3.json("./data/world.json"), // first dataset becomes the "world" argument, second becomes oilData 
   d3.csv("data/oil-gdp.csv", d => ({
-  Country: d.Entity,
+  Country: d.Entity === "Congo" ? "Congo, Republic of the" : d.Entity,
   Oil_rent: +d.of_GDP,
         })
     ) // closing bracket for oilData
@@ -94,8 +94,10 @@ function createVis(world, rent) {
         .attr("stroke", barBlue)
         .attr("stroke-width", 1);
 
+  const displayName = name => name === "Congo, Republic of the" ? "Congo, Rep." : name;
+
   barGroup.append("text")
-    .text(d => d.Country)
+    .text(d => displayName(d.Country))
     .attr("class", "bar-country")
     .attr("x", labelColWidth - 10)
     .attr("y", yScale.bandwidth() / 2)
@@ -109,6 +111,32 @@ function createVis(world, rent) {
     .attr("y", yScale.bandwidth() / 2)
     .attr("dominant-baseline", "middle")
     .attr("text-anchor", "start");
+
+/*----------------------------- */  
+  // Bar chart hover for bar + world map 
+  barGroup
+    .style("cursor", "default")
+    .on("mouseenter", function(_event, d) {
+      // Greys out all bars except the country hovering over for the bar chart only 
+      chart.selectAll("g.bar")
+        .filter(b => b.Country !== d.Country)
+        .style("opacity", 0.15);
+      // Greys out the map as well based on the match from the bar chart country name = world map name 
+      worldMap.selectAll(".country-path")
+        .filter(p => p.properties.name !== d.Country)
+        .attr("fill", "#eae8e8ff")
+        .attr("fill-opacity", 0.6);
+      worldMap.selectAll(".country-path")
+        .filter(p => p.properties.name === d.Country)
+        .attr("fill-opacity", 1); // the country that's matched is fully visible 
+    })
+    .on("mouseleave", function() { //restores all bars with event mouse leaves 
+      chart.selectAll("g.bar").style("opacity", 1);
+      // and also to restore colors from map colour scale for top 10 countries and grey for the rest
+      worldMap.selectAll(".country-path")
+        .attr("fill", d => d.properties.Oil_rent > 0 ? CountryColourScale(d.properties.Oil_rent) : "#eae8e8ff")
+        .attr("fill-opacity", 0.8);
+    });
 
 
  /*----------------------------- */  
@@ -140,10 +168,10 @@ worldMap.selectAll(".country-path")
     .join("path")
         .attr("class", "country-path")
         .attr("d", geoPathGenerator) // drawing a path using the generator above. All the cordinaes part - "geometry":{"type":"MultiPolygon","coordinates":[[[
-        .attr("fill", d =>  d.properties.Oil_rent > 0 ? CountryColourScale(d.properties.Oil_rent) : "#e2dfdfff" ) // Fill based on the condition that oils_rent is bigger than 0, all countries apart from the top 10 will be 0 because of the const match part in the above loop
+        .attr("fill", d =>  d.properties.Oil_rent > 0 ? CountryColourScale(d.properties.Oil_rent) : "#eae8e8ff" ) // Fill based on the condition that oils_rent is bigger than 0, all countries apart from the top 10 will be 0 because of the const match part in the above loop
         .attr("fill-opacity", 0.8)
         .attr("stroke", "#afaeaeff" )
-        .attr("stroke-opacity", 1);
+        .attr("stroke-opacity", 0.7);
 
 }
 

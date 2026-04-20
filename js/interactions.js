@@ -211,7 +211,7 @@ const setupToggle = () => {
     const oilTitle   = document.getElementById("oil-chart-title");
 
     // Oil chart is hidden on page load — urea is shown by default
-    oilChart.style.display = "none";
+    oilChart.style.display = "none"; // hides the elements
     oilTitle.style.display = "none";
 
     // Clicking "Urea prices" shows the urea chart and marks it active
@@ -223,7 +223,7 @@ const setupToggle = () => {
         oilTitle.style.display   = "none";
         oilSource.style.display  = "none";
         btnUrea.classList.add("active");    // apply rose highlight
-        btnOil.classList.remove("active");  // remove blue highlight
+        btnOil.classList.remove("active");  // remove blue highlight - active section from html/css file 
     });
 
     // Clicking "Oil prices" shows the oil chart and marks it active
@@ -235,7 +235,7 @@ const setupToggle = () => {
         oilTitle.style.display   = "";
         oilSource.style.display  = "";
         btnOil.classList.add("active");     // apply blue highlight
-        btnUrea.classList.remove("active"); // remove rose highlight
+        btnUrea.classList.remove("active"); // remove rose highlight - active section from html/css file 
     });
 };
 

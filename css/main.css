@@ -96,6 +96,22 @@
   margin: 0 auto;
 }
 
+.source-note {
+  max-width: 900px;
+  margin: 10px auto 40px auto;
+  font-family: Georgia, serif;
+  font-size: 12px;
+  color: #777;
+  text-align: left;
+}
+
+.source-note a {
+  color: #444;
+}
+
+
+/* ── Chart buttons ───────────────────────────────────── */
+
 .chart-buttons {
   display: flex;
   gap: 8px;
@@ -114,30 +130,22 @@
   border: 1px solid #d0d0d0;
   color: #222;
   transition: background 0.15s, color 0.15s, border-color 0.15s;
+  /* --transition: [transition-property] [transition-duration] [transition-timing-function] [transition-delay] [transition-behavior];*/
 }
 
-#btnUrea.active {
+/* only to apply when the Urea button is active */
+/* see chart-btn active in index.html file */
+#btnUrea.active { 
   background: #b52e5f;
   border-color: #b52e5f;
   color: #fff;
 }
 
+/* only to apply when the Oil button is active */
 #btnOil.active {
   background: #315ed9;
   border-color: #315ed9;
   color: #fff;
 }
 
-.source-note {
-  max-width: 900px;
-  margin: 10px auto 40px auto;
-  font-family: Georgia, serif;
-  font-size: 12px;
-  color: #777;
-  text-align: left;
-}
-
-.source-note a {
-  color: #444;
-}
 
