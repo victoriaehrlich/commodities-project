@@ -1,4 +1,4 @@
-// const barBlue = "#4682b4";
+const barBlue = "#4682b4";
 // //const middleEast = new Set(["Iraq", "Saudi Arabia", "Oman", "Iran"]);
 
 
