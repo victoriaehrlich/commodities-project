@@ -21,3 +21,28 @@ d3.csv("data/Crude_prices.csv", d => ({
     createOilTooltip();
     handleOilMouseEvents(data);
 });
+
+
+Promise.all(
+  [
+  d3.json("./data/world.json"), 
+  d3.csv("data/oil-gdp.csv", d => ({
+  Country: d.Entity,
+  Oil_rent: +d.of_GDP,
+        })
+    ), 
+  d3.csv("data/urea-gdp.csv", d=> ({
+    Country: d.Country,
+    urea_gdp: +d.urea_gdp
+  })
+)
+]
+).then(([world, oilData, ureaData]) => {
+
+const top10 = oilData 
+    .sort((a, b) => b.Oil_rent - a.Oil_rent)
+    .slice(0, 10);
+  createVis(world, top10, ureaData);
+  populateFilters(world, top10, ureaData)
+    
+});
