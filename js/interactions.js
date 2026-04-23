@@ -240,3 +240,117 @@ const setupToggle = () => {
 };
 
 setupToggle();
+
+/* ---------------------------*/
+// Populate filters
+
+const populateFilters =(world, rent, ureaData) => {
+  const labelColWidth = 90;
+
+  d3.select("#filters")
+    .selectAll(".filter")
+    .data(filters)
+    .join("button")
+      .attr("class", d=> `filter ${d.isActive ? "active" : ""}`)
+      .text(d=> d.label)
+    .on("click", (e,d) => {
+      // console.log("DOM event", e);
+      // console.log("attached datum", d)
+    if (!d.isActive) {
+      filters.forEach(filter => // for every row in filter array where theres two of them, if d isnot active then we change the filter active to the d.id that was clicked
+        filter.isActive = (d.id === filter.id) ? true : false
+      )}
+
+
+    if (d.id === "Urea") {
+  
+    const ureaDataSorted = ureaData
+                    .sort((a, b) => b.urea_gdp - a.urea_gdp)
+                    .slice(0, 10);  
+    
+    const ureaXScale = d3.scaleLinear()
+    .domain([0, d3.max(ureaData, d => d.urea_gdp)])
+    .range([labelColWidth, width / 2]);
+
+    const CountryColourScale = d3.scaleSequential()
+          .domain([0,0.20])
+          .interpolator(d3.interpolateYlGnBu); 
+
+      // const ureaYScale = d3.scaleBand()
+      // .domain(ureaDataSorted .map(d => d.Country))
+      // .range([0, innerHeight])
+      // .paddingInner(0.15);
+ 
+
+   d3.selectAll("#bar-chart rect")
+      .data(ureaDataSorted )
+      .attr("width", d=> ureaXScale(d.urea_gdp)- labelColWidth)
+      .attr("fill", d=> CountryColourScale(d.urea_gdp));
+
+     world.features.forEach(country=> { 
+    const props = country.properties;  
+    const match = ureaDataSorted.find(r => r.Country === props.name); 
+    props.urea_gdp = match ? match.urea_gdp : 0; 
+
+    });
+
+
+  d3.selectAll(".bar-country")
+    .data(ureaDataSorted )
+    .text(d=> d.Country);
+
+  d3.selectAll(".bar-value")
+    .data(ureaDataSorted )
+    .text(d => `${d3.format("0.2f")(d.urea_gdp)}%`)
+    .attr("x", d => ureaXScale(d.urea_gdp) + 8)
+
+
+d3.selectAll(".country-path")
+        .attr("fill", d =>  d.properties.urea_gdp > 0 ? CountryColourScale(d.properties.urea_gdp) : "#ccc" ); 
+  
+ } else {
+
+   const labelColWidth = 90;
+    const xScale = d3.scaleLinear()
+      .domain([0, d3.max(rent, d => d.Oil_rent)])
+      .range([labelColWidth, width / 2]);
+
+  const yScale = d3.scaleBand()
+    .domain(rent.map(d => d.Country))
+    .range([0, innerHeight])
+    .paddingInner(0.15);
+
+      const CountryColourScale = d3.scaleSequential() 
+          .domain([10,60])
+          .interpolator(d3.interpolateYlGnBu); 
+
+   d3.selectAll("#bar-chart rect")
+      .data(rent)
+      .attr("width", d=> xScale(d.Oil_rent) - labelColWidth)
+      .attr("fill", d=> CountryColourScale(d.Oil_rent));
+
+
+  d3.selectAll(".bar-country")
+    .data(rent)
+    .text(d=> d.Country);
+
+      d3.selectAll(".bar-value")
+    .data(rent)
+    .text(d => `${d3.format(".1f")(d.Oil_rent)}%`)
+    .attr("x", d => xScale(d.Oil_rent) + 8)
+
+     world.features.forEach(country=> { 
+    const props = country.properties;  
+    const match = rent.find(r => r.Country === props.name);
+    props.Oil_rent = match ? match.Oil_rent : 0; 
+
+    });
+
+  d3.selectAll(".country-path")
+          .attr("fill", d =>  d.properties.Oil_rent > 0 ? CountryColourScale(d.properties.Oil_rent) : "#ccc" ) 
+          .attr("fill-opacity", 0.8)
+          .attr("stroke", "black")
+          .attr("stroke-opacity", 1);
+      }
+    })
+}

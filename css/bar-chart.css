@@ -25,3 +25,33 @@
   font-size: 11px;
   fill: #777;
 }
+
+/* ── Filters ───────────────────────── */ 
+#filters {
+  margin: 10px 0px 5px;
+}
+
+
+.filter {
+  min-width: 80px;
+  margin: 0 5px;
+  padding: 8px 10px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  line-height: 1;
+  color: #faffff;
+  font-weight: 500;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3ms ease-in;
+}
+.filter:hover,
+.filter.active_button {
+  background-color: rgb(6, 82, 82);
+  transition-timing-function: ease-out;
+}
+.filter.active_button {
+  cursor: default;
+}

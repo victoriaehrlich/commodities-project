@@ -1,31 +1,33 @@
-const barBlue = "#4682b4";
-//const middleEast = new Set(["Iraq", "Saudi Arabia", "Oman", "Iran"]);
+// const barBlue = "#4682b4";
+// //const middleEast = new Set(["Iraq", "Saudi Arabia", "Oman", "Iran"]);
 
 
-// A promise all to handle the loading of two datasets
-Promise.all([
-  d3.json("./data/world.json"), // first dataset becomes the "world" argument, second becomes oilData 
-  d3.csv("data/oil-gdp.csv", d => ({
-  Country: d.Entity === "Congo" ? "Congo, Republic of the" : d.Entity,
-  Oil_rent: +d.of_GDP,
-        })
-    ) // closing bracket for oilData
-  ]
-).then(([world, oilData]) => { // loading both parameters
+// // A promise all to handle the loading of two datasets
+// Promise.all([
+//   d3.json("./data/world.json"), // first dataset becomes the "world" argument, second becomes oilData 
+//   d3.csv("data/oil-gdp.csv", d => ({
+//   Country: d.Entity === "Congo" ? "Congo, Republic of the" : d.Entity,
+//   Oil_rent: +d.of_GDP,
+//         })
+//     ) // closing bracket for oilData
+//   ]
+// ).then(([world, oilData]) => { // loading both parameters
   
-const top10 = oilData // Idea potentially that this could be dynamic based on a slider - would be an event handler type input like a button
-    .sort((a, b) => b.Oil_rent - a.Oil_rent)
-    .slice(0, 10);
+// const top10 = oilData // Idea potentially that this could be dynamic based on a slider - would be an event handler type input like a button
+//     .sort((a, b) => b.Oil_rent - a.Oil_rent)
+//     .slice(0, 10);
 
-  createVis(world, top10);
-})
-.catch(error => {
-  console.error("Error loading JSON files:", error);
-});
+//   createVis(world, top10);
+// })
+// .catch(error => {
+//   console.error("Error loading JSON files:", error);
+// });
 
-function createVis(world, rent) {
+
+const createVis = (world, rent, ureaData) => {
 
   const labelColWidth = 90;
+
 
   // Scales
   const CountryColourScale = d3.scaleSequential() // Colour scale for used for both the bars and the map
