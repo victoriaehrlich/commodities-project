@@ -329,6 +329,9 @@ d3.selectAll(".country-path")
 
    d3.selectAll("#bar-chart rect")
       .data(rent)
+      .transition()
+      .duration(500)
+      .ease(d3.easeCubicOut)
       .attr("width", d=> xScale(d.Oil_rent) - labelColWidth)
       .attr("fill", d=> CountryColourScale(d.Oil_rent));
 
