@@ -283,7 +283,10 @@ const populateFilters =(world, rent, ureaData) => {
  
 
    d3.selectAll("#bar-chart rect")
-      .data(ureaDataSorted )
+      .data(ureaDataSorted)
+      .transition()
+      .duration(500)
+      .ease(d3.easeCubicOut)
       .attr("width", d=> ureaXScale(d.urea_gdp)- labelColWidth)
       .attr("fill", d=> CountryColourScale(d.urea_gdp));
 
