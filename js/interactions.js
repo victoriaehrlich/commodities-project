@@ -309,8 +309,10 @@ const populateFilters =(world, rent, ureaData) => {
 
 
 d3.selectAll(".country-path")
+        .transition()
+        .duration(500)
+        .ease(d3.easeCubicOut)
         .attr("fill", d =>  d.properties.urea_gdp > 0 ? CountryColourScale(d.properties.urea_gdp) : "#ccc" ); 
-  
  } else {
 
    const labelColWidth = 90;
@@ -354,6 +356,9 @@ d3.selectAll(".country-path")
 
   d3.selectAll(".country-path")
           .attr("fill", d =>  d.properties.Oil_rent > 0 ? CountryColourScale(d.properties.Oil_rent) : "#ccc" ) 
+          .transition()
+          .duration(500)
+          .ease(d3.easeCubicOut)
           .attr("fill-opacity", 0.8)
           .attr("stroke", "black")
           .attr("stroke-opacity", 1);
