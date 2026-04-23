@@ -15,7 +15,13 @@ let lineXScale, lineYScale;
 let oilXScale, oilYScale; 
 // write out the xScale here and only use one for urea and crude 
 // review chapter 5 for shared scale 
+
+//shared colour scales for both bar + world map combination so they match
+const oilColourScale = d3.scaleSequential().domain([10, 60]).interpolator(d3.interpolateYlGnBu);
+const ureaColourScale = d3.scaleSequential().domain([0, 0.20]).interpolator(d3.interpolateRgb("#c3b6ab","#bd0841"));
+  //  
+
 const filters = [
-    {id: "Oil", label:"Oil", isActive: false, data_name: "rent"},
-    {id:"Urea", label:"Urea", isActive: true, data_name: "ureaData"},
+    {id: "Oil", label:"Oil rent", isActive: true, data_name: "rent"}, //updated label names to match style of line chart 
+    {id:"Urea", label:"Urea rent", isActive: false, data_name: "ureaData"},
 ];

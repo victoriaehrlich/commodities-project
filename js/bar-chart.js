@@ -30,10 +30,6 @@ const createVis = (world, rent, ureaData) => {
 
 
   // Scales
-  const CountryColourScale = d3.scaleSequential() // Colour scale for used for both the bars and the map
-          .domain([10,60])
-          .interpolator(d3.interpolateYlGnBu);
-         //.interpolator(d3.interpolateRgbBasis(["#d5dadfff", "#4682b4", "#08306b"])); // light blue → mid blue → dark navy
 
   
   const svg = d3.select("#bar-chart")
@@ -70,7 +66,7 @@ const createVis = (world, rent, ureaData) => {
     );
 
   // Each bar group holds the rect + country name + value label together
-  const barGroup = chart.selectAll("g.bar")
+  const barGroup = chart.selectAll("g.bar") //named bar group joined to the group - class name
     .data(rent)
     .join("g")
       .attr("class", "bar")
@@ -81,7 +77,7 @@ const createVis = (world, rent, ureaData) => {
         .attr("x", labelColWidth)
         .attr("width", d => xScale(d.Oil_rent) - labelColWidth)
         .attr("height", yScale.bandwidth())
-        .attr("fill", d=> CountryColourScale(d.Oil_rent))
+        .attr("fill", d=> oilColourScale(d.Oil_rent))
         .attr("fill-opacity", 0.7)
         //.attr("fill-opacity", d => middleEast.has(d.Country) ? 1 : 0.4)
         .attr("rx", 2)
@@ -120,23 +116,29 @@ const createVis = (world, rent, ureaData) => {
     .style("cursor", "default")
     .on("mouseenter", function(_event, d) {
       // Greys out all bars except the country hovering over for the bar chart only 
-      chart.selectAll("g.bar")
+      chart.selectAll("g.bar") //referencing the whole g.bar named in the bar-chart group above 
         .filter(b => b.Country !== d.Country)
         .style("opacity", 0.15);
       // Greys out the map as well based on the match from the bar chart country name = world map name 
       worldMap.selectAll(".country-path")
         .filter(p => p.properties.name !== d.Country)
         .attr("fill", "#eae8e8ff")
-        .attr("fill-opacity", 0.6);
+        .attr("fill-opacity", 0.8); //matching opacity across map and bar chart hovers 
       worldMap.selectAll(".country-path")
         .filter(p => p.properties.name === d.Country)
-        .attr("fill-opacity", 1); // the country that's matched is fully visible 
+        .attr("fill-opacity", 0.8); // the country that's matched is fully visible 
     })
-    .on("mouseleave", function() { //restores all bars with event mouse leaves 
+    .on("mouseleave", function() {
       chart.selectAll("g.bar").style("opacity", 1);
-      // and also to restore colors from map colour scale for top 10 countries and grey for the rest
+      const isUrea = filters.find(f => f.id === "Urea").isActive; 
+      // checking which filter is currently active from interactions.js file 
       worldMap.selectAll(".country-path")
-        .attr("fill", d => d.properties.Oil_rent > 0 ? CountryColourScale(d.properties.Oil_rent) : "#eae8e8ff")
+        .attr("fill", d => {
+          if (isUrea) return d.properties.urea_gdp > 0 ? ureaColourScale(d.properties.urea_gdp) : "#eae8e8ff";
+          return d.properties.Oil_rent > 0 ? oilColourScale(d.properties.Oil_rent) : "#eae8e8ff";
+          // depending on const isUrea we use oilColourScale or ureaColourScale
+          // anything outside of the countries on the bar stay white/grey - coloured out 
+        })
         .attr("fill-opacity", 0.8);
     });
 
@@ -170,7 +172,7 @@ worldMap.selectAll(".country-path")
     .join("path")
         .attr("class", "country-path")
         .attr("d", geoPathGenerator) // drawing a path using the generator above. All the cordinaes part - "geometry":{"type":"MultiPolygon","coordinates":[[[
-        .attr("fill", d =>  d.properties.Oil_rent > 0 ? CountryColourScale(d.properties.Oil_rent) : "#eae8e8ff" ) // Fill based on the condition that oils_rent is bigger than 0, all countries apart from the top 10 will be 0 because of the const match part in the above loop
+        .attr("fill", d =>  d.properties.Oil_rent > 0 ? oilColourScale(d.properties.Oil_rent) : "#eae8e8ff" ) // Fill based on the condition that oils_rent is bigger than 0, all countries apart from the top 10 will be 0 because of the const match part in the above loop
         .attr("fill-opacity", 0.8)
         .attr("stroke", "#afaeaeff" )
         .attr("stroke-opacity", 0.7);

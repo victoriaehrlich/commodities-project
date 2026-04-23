@@ -26,32 +26,40 @@
   fill: #777;
 }
 
-/* ── Filters ───────────────────────── */ 
+/* ── Filters ───────────────────────── */
 #filters {
-  margin: 10px 0px 5px;
+  display: flex;
+  gap: 8px;
+  margin: 10px 0 5px;
 }
-
 
 .filter {
-  min-width: 80px;
-  margin: 0 5px;
-  padding: 8px 10px;
-  font-family: 'Roboto', sans-serif;
-  font-size: 16px;
-  line-height: 1;
-  color: #faffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
   font-weight: 500;
-  background-color: rgba(0, 0, 0, 0.5);
-  border: none;
+  letter-spacing: 0.04em;
+  padding: 6px 14px;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3ms ease-in;
+  background: #f0f0f0;
+  border: 1px solid #d0d0d0;
+  color: #222;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
-.filter:hover,
-.filter.active_button {
-  background-color: rgb(6, 82, 82);
-  transition-timing-function: ease-out;
+
+.filter[data-id="Oil"].active {
+  background: #315ed9;
+  border-color: #315ed9;
+  color: #fff;
 }
-.filter.active_button {
+
+.filter[data-id="Urea"].active {
+  background: #b52e5f;
+  border-color: #b52e5f;
+  color: #fff;
+}
+
+.filter.active {
+  pointer-events: none;
   cursor: default;
 }

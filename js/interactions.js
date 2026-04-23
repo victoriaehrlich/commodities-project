@@ -252,6 +252,7 @@ const populateFilters =(world, rent, ureaData) => {
     .data(filters)
     .join("button")
       .attr("class", d=> `filter ${d.isActive ? "active" : ""}`)
+      .attr("data-id", d => d.id)
       .text(d=> d.label)
     .on("click", (e,d) => {
       // console.log("DOM event", e);
@@ -259,7 +260,11 @@ const populateFilters =(world, rent, ureaData) => {
     if (!d.isActive) {
       filters.forEach(filter => // for every row in filter array where theres two of them, if d isnot active then we change the filter active to the d.id that was clicked
         filter.isActive = (d.id === filter.id) ? true : false
-      )}
+      )
+      d3.select("#filters").selectAll("button.filter")
+        .attr("class", f => `filter ${f.isActive ? "active" : ""}`);
+        //added button filters 
+      }
 
 
     if (d.id === "Urea") {
@@ -272,15 +277,8 @@ const populateFilters =(world, rent, ureaData) => {
     .domain([0, d3.max(ureaData, d => d.urea_gdp)])
     .range([labelColWidth, width / 2]);
 
-    const CountryColourScale = d3.scaleSequential()
-          .domain([0,0.20])
-          .interpolator(d3.interpolateYlGnBu); 
-
-      // const ureaYScale = d3.scaleBand()
-      // .domain(ureaDataSorted .map(d => d.Country))
-      // .range([0, innerHeight])
-      // .paddingInner(0.15);
- 
+   d3.selectAll("#bar-chart g.bar").data(ureaDataSorted);
+   // we want the sorted Urea data in the bars
 
    d3.selectAll("#bar-chart rect")
       .data(ureaDataSorted)
@@ -288,31 +286,38 @@ const populateFilters =(world, rent, ureaData) => {
       .duration(500)
       .ease(d3.easeCubicOut)
       .attr("width", d=> ureaXScale(d.urea_gdp)- labelColWidth)
-      .attr("fill", d=> CountryColourScale(d.urea_gdp));
+      .attr("fill", d=> ureaColourScale(d.urea_gdp));
+      // if it is Urea we use the urea colour scale
 
-     world.features.forEach(country=> { 
-    const props = country.properties;  
-    const match = ureaDataSorted.find(r => r.Country === props.name); 
-    props.urea_gdp = match ? match.urea_gdp : 0; 
-
+     world.features.forEach(country=> {
+    const props = country.properties;
+    const match = ureaDataSorted.find(r => r.Country === props.name);
+    props.urea_gdp = match ? match.urea_gdp : 0;
     });
 
-
   d3.selectAll(".bar-country")
-    .data(ureaDataSorted )
+    .data(ureaDataSorted)
     .text(d=> d.Country);
 
   d3.selectAll(".bar-value")
-    .data(ureaDataSorted )
+    .data(ureaDataSorted)
     .text(d => `${d3.format("0.2f")(d.urea_gdp)}%`)
     .attr("x", d => ureaXScale(d.urea_gdp) + 8)
-
 
 d3.selectAll(".country-path")
         .transition()
         .duration(500)
         .ease(d3.easeCubicOut)
-        .attr("fill", d =>  d.properties.urea_gdp > 0 ? CountryColourScale(d.properties.urea_gdp) : "#ccc" ); 
+        .attr("fill", d => d.properties.urea_gdp > 0 ? ureaColourScale(d.properties.urea_gdp) : "#eae8e8ff");
+
+    // added elements outside of map that we want to update with button (title, subtile, and source)
+    // any changes we want to make to those items need to be made in html file 
+    document.getElementById("bar-title-oil").style.display = "none";
+    document.getElementById("bar-title-urea").style.display = "";
+    document.getElementById("bar-subtitle-oil").style.display = "none";
+    document.getElementById("bar-subtitle-urea").style.display = "";
+    document.getElementById("bar-source-oil").style.display = "none";
+    document.getElementById("bar-source-urea").style.display = "";
  } else {
 
    const labelColWidth = 90;
@@ -325,9 +330,8 @@ d3.selectAll(".country-path")
     .range([0, innerHeight])
     .paddingInner(0.15);
 
-      const CountryColourScale = d3.scaleSequential() 
-          .domain([10,60])
-          .interpolator(d3.interpolateYlGnBu); 
+   d3.selectAll("#bar-chart g.bar").data(rent);
+   // we want the oil data here - already the top 10 so no need to reference sorted like for Urea rent
 
    d3.selectAll("#bar-chart rect")
       .data(rent)
@@ -335,33 +339,40 @@ d3.selectAll(".country-path")
       .duration(500)
       .ease(d3.easeCubicOut)
       .attr("width", d=> xScale(d.Oil_rent) - labelColWidth)
-      .attr("fill", d=> CountryColourScale(d.Oil_rent));
-
+      .attr("fill", d=> oilColourScale(d.Oil_rent));
 
   d3.selectAll(".bar-country")
     .data(rent)
-    .text(d=> d.Country);
+    .text(d => d.Country === "Congo, Republic of the" ? "Congo, Rep." : d.Country);
+    // make sure the name for Congo stays the same across button interaction
 
       d3.selectAll(".bar-value")
     .data(rent)
     .text(d => `${d3.format(".1f")(d.Oil_rent)}%`)
     .attr("x", d => xScale(d.Oil_rent) + 8)
 
-     world.features.forEach(country=> { 
-    const props = country.properties;  
+     world.features.forEach(country=> {
+    const props = country.properties;
     const match = rent.find(r => r.Country === props.name);
-    props.Oil_rent = match ? match.Oil_rent : 0; 
-
+    props.Oil_rent = match ? match.Oil_rent : 0;
     });
 
   d3.selectAll(".country-path")
           .transition()
           .duration(500)
           .ease(d3.easeCubicOut)
-          .attr("fill", d =>  d.properties.Oil_rent > 0 ? CountryColourScale(d.properties.Oil_rent) : "#ccc" ) 
+          .attr("fill", d => d.properties.Oil_rent > 0 ? oilColourScale(d.properties.Oil_rent) : "#eae8e8ff")
           .attr("fill-opacity", 0.8)
-          .attr("stroke", "black")
-          .attr("stroke-opacity", 1);
+          .attr("stroke", "#afaeaeff")
+          .attr("stroke-opacity", 0.7);
+
+    // and again makes sure title, subtitle and source are also updated
+    document.getElementById("bar-title-oil").style.display = "";
+    document.getElementById("bar-title-urea").style.display = "none";
+    document.getElementById("bar-subtitle-oil").style.display = "";
+    document.getElementById("bar-subtitle-urea").style.display = "none";
+    document.getElementById("bar-source-oil").style.display = "";
+    document.getElementById("bar-source-urea").style.display = "none";
       }
     })
 }
