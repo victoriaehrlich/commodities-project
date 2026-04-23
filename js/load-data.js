@@ -27,7 +27,7 @@ Promise.all(
   [
   d3.json("./data/world.json"), 
   d3.csv("data/oil-gdp.csv", d => ({
-  Country: d.Entity,
+  Country: d.Entity === "Congo" ? "Congo, Republic of the" : d.Entity,
   Oil_rent: +d.of_GDP,
         })
     ), 
