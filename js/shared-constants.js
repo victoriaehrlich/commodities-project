@@ -15,3 +15,7 @@ let lineXScale, lineYScale;
 let oilXScale, oilYScale; 
 // write out the xScale here and only use one for urea and crude 
 // review chapter 5 for shared scale 
+const filters = [
+    {id: "Oil", label:"Oil", isActive: false, data_name: "rent"},
+    {id:"Urea", label:"Urea", isActive: true, data_name: "ureaData"},
+];
