@@ -129,8 +129,9 @@
   background: #f0f0f0;
   border: 1px solid #d0d0d0;
   color: #222;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  transition: background 500ms cubic-bezier(0.33, 1, 0.68, 1), color 500ms cubic-bezier(0.33, 1, 0.68, 1), border-color 500ms cubic-bezier(0.33, 1, 0.68, 1);
   /* --transition: [transition-property] [transition-duration] [transition-timing-function] [transition-delay] [transition-behavior];*/
+  /* this transition is only for the buttons and doesn't apply to the line chart, see interactions.js for this */
 }
 
 /* only to apply when the Urea button is active */

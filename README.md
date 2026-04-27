@@ -131,10 +131,15 @@ Same as `createTooltip` but appends to `oilInnerChart` with classes `.tooltip-oi
 Same as `handleMouseEvents` but uses `d.DateOil` and `d.Crude`, and updates the `.tooltip-oil` group.
 
 **`setupToggle()`**
-Controls the two buttons that switch between the urea and oil line charts. On page load it hides the oil chart and its title (urea is shown by default). Each button has its own click handler that:
-1. Toggles `display` on both chart divs, their titles, and their source notes
-2. Adds the `.active` class to the clicked button and removes it from the other
-3. The `.active` class triggers a coloured background — rose for Urea prices, blue for Oil prices — with white text. The inactive button falls back to light grey with black text.
+Controls the two buttons that switch between the urea and oil line charts. On page load it hides the oil chart and its title (urea is shown by default). Each button has its own click handler that calls `switchCharts` and updates the active button class.
+
+**`switchCharts(fromEls, toEls)`**
+Handles the animated transition between chart groups. Runs sequentially — fades out the outgoing elements first, then fades in the incoming ones — so both chart groups are never visible at the same time (which would cause a layout jump). Each phase is 200ms with a `d3.easeCubicOut` curve.
+1. Fades each outgoing element to `opacity: 0` over 200ms
+2. Once all outgoing elements have finished, removes them from layout with `display: none`
+3. Makes incoming elements visible in layout (`display: ""`), sets `opacity: 0`, then fades them up to `opacity: 1`
+
+The `.active` class on buttons is handled separately in CSS — rose background (`#b52e5f`) for Urea prices, blue (`#315ed9`) for Oil prices — with a 500ms `cubic-bezier(0.33, 1, 0.68, 1)` transition defined in `main.css`.
 
 ---
 

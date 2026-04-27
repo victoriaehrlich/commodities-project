@@ -210,32 +210,48 @@ const setupToggle = () => {
     const ureaTitle  = document.getElementById("urea-chart-title");
     const oilTitle   = document.getElementById("oil-chart-title");
 
+    // Fades out fromEls, then once all are hidden, fades in toEls
+    // Sequential (not simultaneous) so both chart groups are never visible at once
+    const switchCharts = (fromEls, toEls) => {
+        let done = 0; // tracks how many fade-outs have finished
+        fromEls.forEach(el => {
+            d3.select(el)
+                .transition().duration(200).ease(d3.easeCubicOut) // animate over 200ms with a cubic ease-out curve
+                .style("opacity", 0) // fade to invisible
+                .on("end", function() { // fires once this element's transition completes
+                    d3.select(this).style("display", "none"); // fully remove from layout
+                    if (++done === fromEls.length) { // only proceed once every fromEl has finished
+                        toEls.forEach(t => d3.select(t)
+                            .style("display", "").style("opacity", 0) // put back in layout but invisible
+                            .transition().duration(200).ease(d3.easeCubicOut) // same curve and duration
+                            .style("opacity", 1)); // fade up to fully visible
+                    }
+                });
+        });
+    };
+
     // Oil chart is hidden on page load — urea is shown by default
-    oilChart.style.display = "none"; // hides the elements
+    oilChart.style.display = "none";
     oilTitle.style.display = "none";
 
     // Clicking "Urea prices" shows the urea chart and marks it active
     btnUrea.addEventListener("click", () => {
-        ureaChart.style.display  = "";
-        ureaTitle.style.display  = "";
-        ureaSource.style.display = "";
-        oilChart.style.display   = "none";
-        oilTitle.style.display   = "none";
-        oilSource.style.display  = "none";
+        switchCharts(
+            [oilChart, oilTitle, oilSource],
+            [ureaChart, ureaTitle, ureaSource]
+        );
         btnUrea.classList.add("active");    // apply rose highlight
-        btnOil.classList.remove("active");  // remove blue highlight - active section from html/css file 
+        btnOil.classList.remove("active");  // remove blue highlight - active section from html/css file
     });
 
     // Clicking "Oil prices" shows the oil chart and marks it active
     btnOil.addEventListener("click", () => {
-        ureaChart.style.display  = "none";
-        ureaTitle.style.display  = "none";
-        ureaSource.style.display = "none";
-        oilChart.style.display   = "";
-        oilTitle.style.display   = "";
-        oilSource.style.display  = "";
+        switchCharts(
+            [ureaChart, ureaTitle, ureaSource],
+            [oilChart, oilTitle, oilSource]
+        );
         btnOil.classList.add("active");     // apply blue highlight
-        btnUrea.classList.remove("active"); // remove rose highlight - active section from html/css file 
+        btnUrea.classList.remove("active"); // remove rose highlight - active section from html/css file
     });
 };
 
