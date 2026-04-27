@@ -1,0 +1,65 @@
+/* ── Chart subtitle (italic, below chart title) ──────────────── */
+
+.chart-subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-style: italic;
+  color: #777;
+  max-width: 900px;
+  margin: -10px auto 14px auto;
+  text-align: left;
+}
+
+/* ── Country name labels (left of each bar) ──────────────────── */
+
+.bar-country {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  fill: #444;
+}
+
+/* ── Value labels (right of each bar) ───────────────────────── */
+
+.bar-value {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  fill: #777;
+}
+
+/* ── Filters ───────────────────────── */
+#filters {
+  display: flex;
+  gap: 8px;
+  margin: 10px 0 5px;
+}
+
+.filter {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  background: #f0f0f0;
+  border: 1px solid #d0d0d0;
+  color: #222;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.filter[data-id="Oil"].active {
+  background: #315ed9;
+  border-color: #315ed9;
+  color: #fff;
+}
+
+.filter[data-id="Urea"].active {
+  background: #b52e5f;
+  border-color: #b52e5f;
+  color: #fff;
+}
+
+.filter.active {
+  pointer-events: none;
+  cursor: default;
+}

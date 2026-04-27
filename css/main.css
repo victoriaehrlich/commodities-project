@@ -1,0 +1,151 @@
+/* ── Shared container ────────────────────────────────────────── */
+
+.responsive-svg-container {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 900px;
+  text-align: left;
+}
+
+/* ── Intro / About section ───────────────────────────────────── */
+
+.about-week {
+  width: 100%;
+  max-width: 900px;
+  margin: 60px auto 30px auto;
+  padding: 0;
+  text-align: left;
+}
+
+.about-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #7a7a7a;
+  margin: 0 0 14px 0;
+}
+
+.paragraph-blog {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.75;
+  color: #4a4a4a;
+  max-width: 900px;
+  margin: 0 0 16px 0;
+}
+
+/* ── Divider between intro and article ──────────────────────── */
+
+.article-start {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto 36px auto;
+  border: none;
+  border-top: 1px solid #ececec;
+}
+
+/* ── Main article typography ─────────────────────────────────── */
+
+.section-title {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 44px;
+  line-height: 1.1;
+  font-weight: 400;
+  letter-spacing: -1px;
+  margin: 60px auto 10px auto;
+  max-width: 900px;
+  text-align: left;
+}
+
+.subtitle {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 20px;
+  font-style: italic;
+  font-weight: 400;
+  max-width: 900px;
+  margin: 20px auto;
+  text-align: left;
+}
+
+.paragraph {
+  max-width: 900px;
+  margin: 30px auto;
+  font-family: Georgia, serif;
+  font-size: 14px;
+  line-height: 1.6;
+  text-align: left;
+  color: #333;
+}
+
+.chart-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: #555;
+  max-width: 900px;
+  margin: 42px auto 18px auto;
+  text-align: left;
+}
+
+.chart-header {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.source-note {
+  max-width: 900px;
+  margin: 10px auto 40px auto;
+  font-family: Georgia, serif;
+  font-size: 12px;
+  color: #777;
+  text-align: left;
+}
+
+.source-note a {
+  color: #444;
+}
+
+
+/* ── Chart buttons ───────────────────────────────────── */
+
+.chart-buttons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.chart-btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  background: #f0f0f0;
+  border: 1px solid #d0d0d0;
+  color: #222;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  /* --transition: [transition-property] [transition-duration] [transition-timing-function] [transition-delay] [transition-behavior];*/
+}
+
+/* only to apply when the Urea button is active */
+/* see chart-btn active in index.html file */
+#btnUrea.active { 
+  background: #b52e5f;
+  border-color: #b52e5f;
+  color: #fff;
+}
+
+/* only to apply when the Oil button is active */
+#btnOil.active {
+  background: #315ed9;
+  border-color: #315ed9;
+  color: #fff;
+}
+
+
