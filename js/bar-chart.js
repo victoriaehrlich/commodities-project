@@ -150,9 +150,10 @@ const createVis = (world, rent, ureaData) => {
     .attr("transform", `translate(500,0)`); // Position at the start of the hal way point on the SVG
 
 
-  const projectionMercator = d3.geoMercator() 
-                    .translate([width/4.5, height/1.5]) // Translates the centre of the map e.g. 1000/4.5 = 220 but its from the starting point of 500 of the grouped element
-                    .scale(100); // determines how zoomed in the map in combination with the size of grouped element or svg 
+  const projectionMercator = d3.geoEqualEarth() 
+                               .translate([width/12.5, height/1.6])
+                              .scale(290)
+                              .clipExtent([[0, 20], [1000, 500]]); // To cut only have Africa/Middle East for the focus of Oil imports 
 
 
   const geoPathGenerator = d3.geoPath() // intitialises a path generator using the function d3.geoPath(). Same process as a line or area generator
