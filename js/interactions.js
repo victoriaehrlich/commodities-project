@@ -295,6 +295,8 @@ const populateFilters =(world, rent, ureaData) => {
     props.urea_gdp = match ? match.urea_gdp : 0;
     });
 
+      d3.select(".guyana-note").attr("display", "none");
+
     const projectionMercatorUrea = d3.geoEqualEarth()   // Creating a separate projection for Urea as Worldwide needed
                                      .translate([width/4.9, height/1.7])
                                      .scale(122); // Samller scale for being more zoomed out
@@ -309,8 +311,8 @@ const populateFilters =(world, rent, ureaData) => {
         .ease(d3.easeCubicOut)
         .attr("fill", d => d.properties.urea_gdp > 0 ? ureaColourScale(d.properties.urea_gdp) : "#eae8e8ff")
         .attr("fill-opacity", 0.8)
-        .attr("stroke", "black")
-        .attr("stroke-opacity", 1); ;
+        .attr("stroke", "#afaeaeff")
+        .attr("stroke-opacity", 0.7);
     
   
     
@@ -350,7 +352,9 @@ const populateFilters =(world, rent, ureaData) => {
     document.getElementById("bar-source-urea").style.display = "";
  } else {
 
-  const projectionMercatorOil = d3.geoEqualEarth() // new oil projection needed to haev the toggle effect. The same code as in the bar-chart file, this code could be moved to a shared constants if needed 
+    d3.select(".guyana-note").attr("display", null);
+
+    const projectionMercatorOil = d3.geoEqualEarth() // new oil projection needed to haev the toggle effect. The same code as in the bar-chart file, this code could be moved to a shared constants if needed
                                   .translate([width/12.5, height/1.6])
                                   .scale(290)
                                   .clipExtent([[0, 20], [1000, 500]]);

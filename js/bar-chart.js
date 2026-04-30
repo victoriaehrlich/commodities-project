@@ -150,10 +150,10 @@ const createVis = (world, rent, ureaData) => {
     .attr("transform", `translate(500,0)`); // Position at the start of the hal way point on the SVG
 
 
-  const projectionMercator = d3.geoEqualEarth() 
+  const projectionMercator = d3.geoEqualEarth()
                                .translate([width/12.5, height/1.6])
                               .scale(290)
-                              .clipExtent([[0, 20], [1000, 500]]); // To cut only have Africa/Middle East for the focus of Oil imports 
+                              .clipExtent([[0, 20], [1000, 500]]); // To cut only have Africa/Middle East for the focus of Oil imports
 
 
   const geoPathGenerator = d3.geoPath() // intitialises a path generator using the function d3.geoPath(). Same process as a line or area generator
@@ -169,7 +169,7 @@ const createVis = (world, rent, ureaData) => {
 
 
 worldMap.selectAll(".country-path")
-    .data(world.features) // I missed out the .features here which is why it didnt load, it has to be world.features as that's what the geopath generator is looking to plot 
+    .data(world.features) // I missed out the .features here which is why it didnt load, it has to be world.features as that's what the geopath generator is looking to plot
     .join("path")
         .attr("class", "country-path")
         .attr("d", geoPathGenerator) // drawing a path using the generator above. All the cordinaes part - "geometry":{"type":"MultiPolygon","coordinates":[[[
@@ -177,6 +177,15 @@ worldMap.selectAll(".country-path")
         .attr("fill-opacity", 0.8)
         .attr("stroke", "#afaeaeff" )
         .attr("stroke-opacity", 0.7);
+
+  worldMap.append("text")
+    .attr("class", "guyana-note")
+    .attr("x", 5)
+    .attr("y", 492)
+    .attr("font-family", "Inter, sans-serif")
+    .attr("font-size", "9px")
+    .attr("fill", "#999")
+    .text("* Guyana is located in South America and falls outside this map view");
 
 }
 
