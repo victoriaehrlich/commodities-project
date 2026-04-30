@@ -288,6 +288,31 @@ const populateFilters =(world, rent, ureaData) => {
     const ureaDataSorted = ureaData
                     .sort((a, b) => b.urea_gdp - a.urea_gdp)
                     .slice(0, 10);  
+      
+    world.features.forEach(country=> {
+    const props = country.properties;
+    const match = ureaDataSorted.find(r => r.Country === props.name);
+    props.urea_gdp = match ? match.urea_gdp : 0;
+    });
+
+    const projectionMercatorUrea = d3.geoEqualEarth()   // Creating a separate projection for Urea as Worldwide needed
+                                     .translate([width/4.9, height/1.7])
+                                     .scale(122); // Samller scale for being more zoomed out
+      
+    const geoPathGeneratorUrea = d3.geoPath() // Creating the paths for the new Urea projection
+                                  .projection(projectionMercatorUrea) ;
+
+    d3.selectAll(".country-path")
+      .attr("d", geoPathGeneratorUrea) // Leaving the change from one projection to another out ebove the transition duration methods. When it's included some of the lines get disorted in transition.
+        .transition()
+        .duration(500)
+        .ease(d3.easeCubicOut)
+        .attr("fill", d => d.properties.urea_gdp > 0 ? ureaColourScale(d.properties.urea_gdp) : "#eae8e8ff")
+        .attr("fill-opacity", 0.8)
+        .attr("stroke", "black")
+        .attr("stroke-opacity", 1); ;
+    
+  
     
     const ureaXScale = d3.scaleLinear()
     .domain([0, d3.max(ureaData, d => d.urea_gdp)])
@@ -305,11 +330,6 @@ const populateFilters =(world, rent, ureaData) => {
       .attr("fill", d=> ureaColourScale(d.urea_gdp));
       // if it is Urea we use the urea colour scale
 
-     world.features.forEach(country=> {
-    const props = country.properties;
-    const match = ureaDataSorted.find(r => r.Country === props.name);
-    props.urea_gdp = match ? match.urea_gdp : 0;
-    });
 
   d3.selectAll(".bar-country")
     .data(ureaDataSorted)
@@ -319,12 +339,6 @@ const populateFilters =(world, rent, ureaData) => {
     .data(ureaDataSorted)
     .text(d => `${d3.format("0.2f")(d.urea_gdp)}%`)
     .attr("x", d => ureaXScale(d.urea_gdp) + 8)
-
-d3.selectAll(".country-path")
-        .transition()
-        .duration(500)
-        .ease(d3.easeCubicOut)
-        .attr("fill", d => d.properties.urea_gdp > 0 ? ureaColourScale(d.properties.urea_gdp) : "#eae8e8ff");
 
     // added elements outside of map that we want to update with button (title, subtile, and source)
     // any changes we want to make to those items need to be made in html file 
@@ -336,8 +350,33 @@ d3.selectAll(".country-path")
     document.getElementById("bar-source-urea").style.display = "";
  } else {
 
-   const labelColWidth = 90;
-    const xScale = d3.scaleLinear()
+  const projectionMercatorOil = d3.geoEqualEarth() // new oil projection needed to haev the toggle effect. The same code as in the bar-chart file, this code could be moved to a shared constants if needed 
+                                  .translate([width/12.5, height/1.6])
+                                  .scale(290)
+                                  .clipExtent([[0, 20], [1000, 500]]);
+      
+ const geoPathGeneratorOil = d3.geoPath() 
+                               .projection(projectionMercatorOil); 
+    
+  world.features.forEach(country=> {
+                        const props = country.properties;
+                        const match = rent.find(r => r.Country === props.name);
+                        props.Oil_rent = match ? match.Oil_rent : 0;
+                        });
+  
+  d3.selectAll(".country-path")
+                .attr("d", geoPathGeneratorOil)
+                .transition()
+                .duration(500)
+                .ease(d3.easeCubicOut)
+                  .attr("fill", d => d.properties.Oil_rent > 0 ? oilColourScale(d.properties.Oil_rent) : "#eae8e8ff")
+                  .attr("fill-opacity", 0.8)
+                  .attr("stroke", "#afaeaeff")
+                  .attr("stroke-opacity", 0.7);
+    
+                        
+  const labelColWidth = 90;
+  const xScale = d3.scaleLinear()
       .domain([0, d3.max(rent, d => d.Oil_rent)])
       .range([labelColWidth, width / 2]);
 
@@ -366,21 +405,6 @@ d3.selectAll(".country-path")
     .data(rent)
     .text(d => `${d3.format(".1f")(d.Oil_rent)}%`)
     .attr("x", d => xScale(d.Oil_rent) + 8)
-
-     world.features.forEach(country=> {
-    const props = country.properties;
-    const match = rent.find(r => r.Country === props.name);
-    props.Oil_rent = match ? match.Oil_rent : 0;
-    });
-
-  d3.selectAll(".country-path")
-          .transition()
-          .duration(500)
-          .ease(d3.easeCubicOut)
-          .attr("fill", d => d.properties.Oil_rent > 0 ? oilColourScale(d.properties.Oil_rent) : "#eae8e8ff")
-          .attr("fill-opacity", 0.8)
-          .attr("stroke", "#afaeaeff")
-          .attr("stroke-opacity", 0.7);
 
     // and again makes sure title, subtitle and source are also updated
     document.getElementById("bar-title-oil").style.display = "";
